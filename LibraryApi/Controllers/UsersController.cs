@@ -1,9 +1,11 @@
 ﻿using BusinessLayer.DTOs;
 using BusinessLayer.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryApi.Controllers
 {
+    [Authorize]
     public class UsersController : Controller
     {
         private readonly UserService _userService;
@@ -12,7 +14,7 @@ namespace LibraryApi.Controllers
         {
             _userService = userService;
         }
-
+        [Authorize(Roles = $"{Roles.Admin}")]
         // GET: api/users
         [HttpGet("GetAllUsers", Name = "GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
@@ -21,7 +23,7 @@ namespace LibraryApi.Controllers
 
             return Ok(users);
         }
-
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         // GET: api/users/5
         [HttpGet("GetUserBy{id}", Name = "GetUserById")]
         public async Task<IActionResult> GetUserById(int id)
@@ -33,7 +35,7 @@ namespace LibraryApi.Controllers
 
             return Ok(user);
         }
-
+        [Authorize(Roles = $"{Roles.Admin}")]
         // POST: api/users
         [HttpPost("AddUser",Name = "AddUser")]
         public async Task<IActionResult> AddUser(
@@ -43,7 +45,7 @@ namespace LibraryApi.Controllers
 
             return Ok("User Created Successfully");
         }
-
+        [Authorize(Roles = $"{Roles.Admin}")]
         // PUT: api/users/5
         [HttpPut("UpdateUserBy{id}" ,Name = "UpdateUser")]
         public async Task<IActionResult> UpdateUser(
@@ -54,7 +56,7 @@ namespace LibraryApi.Controllers
 
             return Ok("User Updated Successfully");
         }
-
+        [Authorize(Roles = $"{Roles.Admin}")]
         // DELETE: api/users/5
         [HttpDelete("DeleteUserBy{id}", Name = "DeleteUser")]
         public async Task<IActionResult> DeleteUser(int id)

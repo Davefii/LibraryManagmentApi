@@ -1,9 +1,11 @@
 ﻿using BusinessLayer.DTOs;
 using BusinessLayer.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UserProfileController : Controller
@@ -14,7 +16,7 @@ namespace LibraryApi.Controllers
         {
             _profileService = profileService;
         }
-
+        [Authorize(Roles = $"{Roles.Admin}")]
         // GET: api/userprofiles
         [HttpGet("AllProfileUser", Name = "AllProfileUser")]
         public async Task<IActionResult> GetAllProfiles()
@@ -23,7 +25,7 @@ namespace LibraryApi.Controllers
 
             return Ok(profiles);
         }
-
+        [Authorize(Roles = $"{Roles.Admin}")]
         // GET: api/userprofiles/5
         [HttpGet("GetProfileBy{id}", Name = "GetProfileById")]
         public async Task<IActionResult> GetProfileById(int id)
@@ -35,7 +37,7 @@ namespace LibraryApi.Controllers
 
             return Ok(profile);
         }
-
+        [Authorize(Roles = $"{Roles.Admin}")]
         // POST: api/userprofiles
         [HttpPost("CreateProfileUser", Name = "CreateProfileUser")]
         public async Task<IActionResult> AddProfile(
@@ -45,7 +47,7 @@ namespace LibraryApi.Controllers
 
             return Ok("Profile Created Successfully");
         }
-
+        [Authorize(Roles = $"{Roles.Admin}")]
         // PUT: api/userprofiles/5
         [HttpPut("UpdateProfile{id}", Name = "UpdateProfile")]
         public async Task<IActionResult> UpdateProfile(
@@ -56,7 +58,7 @@ namespace LibraryApi.Controllers
 
             return Ok("Profile Updated Successfully");
         }
-
+        [Authorize(Roles = $"{Roles.Admin}")]
         // DELETE: api/userprofiles/5
         [HttpDelete("DeleteProfile{id}", Name = "DeleteProfile")]
         public async Task<IActionResult> DeleteProfile(int id)

@@ -1,9 +1,11 @@
 ﻿using BusinessLayer.DTOs;
 using BusinessLayer.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryApi.Controllers
 {
+    [Authorize]
     public class CategoryController : Controller
     {
         private readonly CategoryService _categoryService;
@@ -12,6 +14,7 @@ namespace LibraryApi.Controllers
             _categoryService = categoryService;
         }
         // GET: api/categories
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         [HttpGet("GetAllCategorys", Name = "GetAllCategorys")]
         public async Task<IActionResult> GetAllCategories()
         {
@@ -19,7 +22,7 @@ namespace LibraryApi.Controllers
 
             return Ok(categories);
         }
-
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         // GET: api/categories/5
         [HttpGet("GetCategoryBy{id}", Name = "GetCategoryById")]
         public async Task<IActionResult> GetCategoryById(int id)
@@ -31,7 +34,7 @@ namespace LibraryApi.Controllers
 
             return Ok(category);
         }
-
+        [Authorize(Roles = $"{Roles.Admin}")]
         // POST: api/categories
         [HttpPost("CreateCategory", Name = "CreateCategory")]
         public async Task<IActionResult> AddCategory(CreateCategoryDTO dto)
@@ -40,7 +43,7 @@ namespace LibraryApi.Controllers
 
             return Ok("Category Added Successfully");
         }
-
+        [Authorize(Roles = $"{Roles.Admin}")]
         // PUT: api/categories/5
         [HttpPut("UpdateCategoryBy{id}", Name = "UpdateCategory")]
         public async Task<IActionResult> UpdateCategory(
@@ -51,7 +54,7 @@ namespace LibraryApi.Controllers
 
             return Ok("Category Updated Successfully");
         }
-
+        [Authorize(Roles = $"{Roles.Admin}")]
         // DELETE: api/categories/5
         [HttpDelete("DeleteCategoryBy{id}", Name = "DeleteCategory")]
         public async Task<IActionResult> DeleteCategory(int id)

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BCrypt.Net;
 
 namespace BusinessLayer.Services
 {
@@ -66,7 +67,7 @@ namespace BusinessLayer.Services
             var user = new User
             {
                 Email = dto.Email,
-                Password = dto.Password,
+                Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 Role = dto.Role,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow
@@ -87,6 +88,7 @@ namespace BusinessLayer.Services
 
             user.Email = dto.Email;
             user.Role = dto.Role;
+            BCrypt.Net.BCrypt.HashPassword(dto.Password);
             user.IsActive = dto.IsActive;
 
             await _userRepository.UpdateAsync(user);

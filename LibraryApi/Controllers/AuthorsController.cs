@@ -1,9 +1,11 @@
 ﻿using BusinessLayer.DTOs;
 using BusinessLayer.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AuthorsController : Controller
@@ -14,13 +16,13 @@ namespace LibraryApi.Controllers
         {
             _authorService = authorService;
         }
-
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         [HttpGet("ListAuthors", Name = "ListAuthors")]
         public async Task<IActionResult> GetAllAuthors()
         {
             return Ok(await _authorService.GetAllAuthors());
         }
-
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         [HttpGet("GetAuthorBy{id}", Name = "GetAuthorByID")]
         public async Task<IActionResult> GetAuthorById(int id)
         {
@@ -31,7 +33,7 @@ namespace LibraryApi.Controllers
 
             return Ok(author);
         }
-
+        [Authorize(Roles = $"{Roles.Admin}")]
         [HttpPost("AddAuthor", Name = "AddAuthor")]
         public async Task<IActionResult> AddAuthor(CreateAuthorDTO dto)
         {
@@ -39,7 +41,7 @@ namespace LibraryApi.Controllers
 
             return Ok();
         }
-
+        [Authorize(Roles = $"{Roles.Admin}")]
         [HttpPut("UpdateAuthor{id}", Name = "UpdateAuthorbyID")]
         public async Task<IActionResult> UpdateAuthor(
             int id,
@@ -49,7 +51,7 @@ namespace LibraryApi.Controllers
 
             return Ok();
         }
-
+        [Authorize(Roles = $"{Roles.Admin}")]
         [HttpDelete("DeleteAuthor{id}", Name = "DeleteAuthorbyID")]
         public async Task<IActionResult> DeleteAuthor(int id)
         {
