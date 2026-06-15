@@ -48,6 +48,7 @@ namespace BusinessLayer.Services
             return new MemberResponseDTO
             {
                 Id = member.Id,
+                UserId = member.UserId,
                 Name = member.Name,
                 Phone = member.Phone,
                 Address = member.Address,

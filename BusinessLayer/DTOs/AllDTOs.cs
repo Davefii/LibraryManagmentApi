@@ -83,7 +83,7 @@ namespace BusinessLayer.DTOs
         public string Email { get; set; } = null!;
         [Required]
         public string Password { get; set; } = null!;
-        public string Role { get; set; } = null!;
+
         public DateTime CreatedAt { get; set; }
         public bool IsActive { get; set; }
     }
@@ -273,6 +273,7 @@ namespace BusinessLayer.DTOs
     public class MemberResponseDTO
     {
         public int Id { get; set; }
+        public int UserId { get; set; }
         public string Name { get; set; } = null!;
         public string? Phone { get; set; }
         public string? Address { get; set; }
@@ -280,6 +281,7 @@ namespace BusinessLayer.DTOs
         public bool IsActive { get; set; }
         public int TotalBorrowings { get; set; }
         public int ActiveBorrowings { get; set; }
+        //public List<User> User { get;} = new();
     }
     public class MemberForBorrowingsDTO
     {
@@ -305,6 +307,7 @@ namespace BusinessLayer.DTOs
     public class BorrowingResponseDTO
     {
         public int Id { get; set; }
+        public int UserId { get; set; }
         public int MemberId { get; set; }
         public int BookId { get; set; }
         public DateTime BorrowDate { get; set; }

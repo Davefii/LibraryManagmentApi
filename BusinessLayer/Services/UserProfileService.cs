@@ -60,6 +60,26 @@ namespace BusinessLayer.Services
             };
         }
 
+        public async Task<UserProfileResponseDTO?>GetByUserId(int userId)
+        {
+            var profile =
+                await _profileRepository
+                    .GetByUserIdAsync(userId);
+
+            if (profile == null)
+                return null;
+
+            return new UserProfileResponseDTO
+            {
+                Id = profile.Id,
+                UserId = profile.UserId,
+                FirstName = profile.FirstName,
+                LastName = profile.LastName,
+                PhoneNumber = profile.PhoneNumber,
+                Address = profile.Address
+            };
+        }
+
         public async Task AddProfile(
             CreateUserProfileDTO dto)
         {

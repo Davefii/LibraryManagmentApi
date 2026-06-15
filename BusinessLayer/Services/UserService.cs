@@ -1,12 +1,13 @@
-﻿using BusinessLayer.DTOs;
+﻿using BCrypt.Net;
+using BusinessLayer.DTOs;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using BCrypt.Net;
 
 namespace BusinessLayer.Services
 {
@@ -87,7 +88,6 @@ namespace BusinessLayer.Services
                 throw new Exception("User Not Found");
 
             user.Email = dto.Email;
-            user.Role = dto.Role;
             BCrypt.Net.BCrypt.HashPassword(dto.Password);
             user.IsActive = dto.IsActive;
 

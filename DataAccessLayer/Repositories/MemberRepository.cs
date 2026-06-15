@@ -27,7 +27,7 @@ namespace DataAccessLayer.Repositories
 
         public async Task<Member?> GetByIdAsync(int id)
         {
-            return await _context.Members
+            return await _context.Members.Include(m => m.User)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 

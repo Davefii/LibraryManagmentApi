@@ -27,7 +27,7 @@ namespace DataAccessLayer.Repositories
 
         public async Task<Borrowing?> GetByIdAsync(int id)
         {
-            return await _context.Borrowings
+            return await _context.Borrowings.Include(x => x.Member)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
@@ -87,6 +87,13 @@ namespace DataAccessLayer.Repositories
                 .CountAsync(x =>
                     !x.IsReturned &&
                     x.DueDate < DateTime.UtcNow);
+        }
+
+        public async Task<List<Borrowing>>GetBorrowingsByMemberIdAsync(int memberId)
+        {
+            return await _context.Borrowings
+                .Where(x => x.MemberId == memberId)
+                .ToListAsync();
         }
     }
 }

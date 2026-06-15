@@ -2,6 +2,7 @@
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace LibraryApi.Controllers
 {
@@ -28,7 +29,17 @@ namespace LibraryApi.Controllers
         [HttpGet("GetUserBy{id}", Name = "GetUserById")]
         public async Task<IActionResult> GetUserById(int id)
         {
-            var user = await _userService.GetUserById(id);
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            bool isAdmin = User.IsInRole(Roles.Admin);
+
+            if (!isAdmin && currentUserId != id)
+            {
+                return Forbid();
+            }
+
+            var user =
+                await _userService.GetUserById(id);
 
             if (user == null)
                 return NotFound();
@@ -52,9 +63,29 @@ namespace LibraryApi.Controllers
             int id,
             [FromBody] UpdateUserDTO dto)
         {
+            var user = await _userService.GetUserById(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var currentUserId =
+                int.Parse(
+                    User.FindFirst(ClaimTypes.NameIdentifier)!
+                        .Value);
+
+            bool isAdmin =
+                User.IsInRole(Roles.Admin);
+
+            if (!isAdmin && currentUserId != id)
+            {
+                return Forbid();
+            }
+
             await _userService.UpdateUser(id, dto);
 
-            return Ok("User Updated Successfully");
+            return NoContent();
         }
         [Authorize(Roles = $"{Roles.Admin}")]
         // DELETE: api/users/5

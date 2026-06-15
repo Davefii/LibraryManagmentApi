@@ -2,6 +2,7 @@
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace LibraryApi.Controllers
 {
@@ -11,12 +12,13 @@ namespace LibraryApi.Controllers
     public class MembersController : Controller
     {
         private readonly MemberService _memberService;
+        private readonly UserProfileService _userProfileService;
 
         public MembersController(MemberService memberService)
         {
             _memberService = memberService;
         }
-        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
+        [Authorize(Roles = $"{Roles.Admin}")]
         [HttpGet("ListMemebers", Name = "ListMemebers")]
         public async Task<IActionResult> GetAllMembers()
         {
@@ -31,6 +33,20 @@ namespace LibraryApi.Controllers
 
             if (member == null)
                 return NotFound();
+
+            var currentUserId =
+                int.Parse(
+                    User.FindFirst(ClaimTypes.NameIdentifier)!
+                        .Value);
+
+            bool isAdmin =
+                User.IsInRole(Roles.Admin);
+
+            if (!isAdmin &&
+                member.UserId != currentUserId)
+            {
+                return Forbid();
+            }
 
             return Ok(member);
         }
@@ -49,17 +65,52 @@ namespace LibraryApi.Controllers
             int id,
             UpdateMemberDTO dto)
         {
+            var member =
+                    await _memberService.GetMemberById(id);
+
+            if (member == null)
+                return NotFound();
+
+            var currentUserId =
+                int.Parse(
+                    User.FindFirst(ClaimTypes.NameIdentifier)!
+                        .Value);
+
+            bool isAdmin =
+                User.IsInRole(Roles.Admin);
+
+            if (!isAdmin &&
+                member.UserId != currentUserId)
+            {
+                return Forbid();
+            }
+
             await _memberService.UpdateMember(id, dto);
 
-            return Ok("Member Updated Successfully");
+            return NoContent();
         }
-        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
+        [Authorize(Roles = $"{Roles.Admin}")]
         [HttpDelete("DeleteMemeberBy{id}", Name = "DeleteMemeberByID")]
         public async Task<IActionResult> DeleteMember(int id)
         {
             await _memberService.DeleteMember(id);
 
             return Ok("Member Deleted Successfully");
+        }
+        [HttpPut("UpdateUserProfileByUser{id}", Name = "UpdateUserProfileByUserID")]
+        public async Task<IActionResult> UpdateMyProfile([FromBody] UpdateUserProfileDTO dto)
+        {
+            var currentUserId =
+                int.Parse(
+                    User.FindFirst(ClaimTypes.NameIdentifier)!
+                        .Value);
+
+            await _userProfileService
+                .UpdateProfile(
+                    currentUserId,
+                    dto);
+
+            return NoContent();
         }
     }
 }

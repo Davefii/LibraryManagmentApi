@@ -42,8 +42,7 @@ namespace BusinessLayer.Services
             }).ToList();
         }
 
-        public async Task<List<BorrowingResponseDTO>>
-            GetAllBorrowings()
+        public async Task<List<BorrowingResponseDTO>>GetAllBorrowings()
         {
             var borrowings =
                 await _borrowingRepository.GetAllAsync();
@@ -61,8 +60,7 @@ namespace BusinessLayer.Services
             }).ToList();
         }
 
-        public async Task<BorrowingResponseDTO?>
-            GetBorrowingById(int id)
+        public async Task<BorrowingResponseDTO?>GetBorrowingById(int id)
         {
             var borrowing =
                 await _borrowingRepository.GetByIdAsync(id);
@@ -74,6 +72,7 @@ namespace BusinessLayer.Services
             {
                 Id = borrowing.Id,
                 MemberId = borrowing.MemberId,
+                UserId = borrowing.Member.UserId,
                 BookId = borrowing.BookId,
                 BorrowDate = borrowing.BorrowDate,
                 DueDate = borrowing.DueDate,
@@ -81,6 +80,26 @@ namespace BusinessLayer.Services
                 IsReturned = borrowing.IsReturned,
                 CreatedAt = borrowing.CreatedAt
             };
+        }
+
+        public async Task<List<BorrowingResponseDTO>>GetMemberBorrowings(int memberId)
+        {
+            var borrowings =
+                await _borrowingRepository
+                    .GetBorrowingsByMemberIdAsync(memberId);
+
+            return borrowings.Select(b =>
+                new BorrowingResponseDTO
+                {
+                    Id = b.Id,
+                    MemberId = b.MemberId,
+                    BookId = b.BookId,
+                    BorrowDate = b.BorrowDate,
+                    DueDate = b.DueDate,
+                    ReturnDate = b.ReturnDate,
+                    IsReturned = b.IsReturned,
+                    CreatedAt = b.CreatedAt
+                }).ToList();
         }
 
         public async Task AddBorrowing(

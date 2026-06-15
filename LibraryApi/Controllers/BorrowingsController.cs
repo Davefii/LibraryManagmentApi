@@ -2,6 +2,7 @@
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace LibraryApi.Controllers
 {
@@ -10,7 +11,7 @@ namespace LibraryApi.Controllers
     public class BorrowingsController : Controller
     {
         private readonly BorrowingService _borrowingService;
-
+        private readonly MemberService _memberService;
         public BorrowingsController(
             BorrowingService borrowingService)
         {
@@ -35,8 +36,56 @@ namespace LibraryApi.Controllers
             if (borrowing == null)
                 return NotFound();
 
+            var currentUserId =
+                int.Parse(
+                    User.FindFirst(ClaimTypes.NameIdentifier)!
+                        .Value);
+
+            bool isAdmin =
+                User.IsInRole(Roles.Admin);
+
+            if (!isAdmin &&
+                borrowing.UserId != currentUserId)
+            {
+                return Forbid();
+            }
+
             return Ok(borrowing);
         }
+
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
+        [HttpGet("{memberId}/history")]
+        public async Task<IActionResult>
+    GetBorrowingHistory(int memberId)
+        {
+            var member =
+                await _memberService
+                    .GetMemberById(memberId);
+
+            if (member == null)
+                return NotFound();
+
+            var currentUserId =
+                int.Parse(
+                    User.FindFirst(ClaimTypes.NameIdentifier)!
+                        .Value);
+
+            bool isAdmin =
+                User.IsInRole(Roles.Admin);
+
+            if (!isAdmin &&
+                member.UserId != currentUserId)
+            {
+                return Forbid();
+            }
+
+            var history =
+                await _borrowingService
+                    .GetMemberBorrowings(memberId);
+
+            return Ok(history);
+        }
+
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         [HttpPost("AddBorrowing", Name = "AddBorrowing")]
         public async Task<IActionResult> AddBorrowing(
@@ -52,18 +101,60 @@ namespace LibraryApi.Controllers
             int id,
             UpdateBorrowingDTO dto)
         {
+            var borrowing =
+                    await _borrowingService
+                        .GetBorrowingById(id);
+
+            if (borrowing == null)
+                return NotFound();
+
+            var currentUserId =
+                int.Parse(
+                    User.FindFirst(ClaimTypes.NameIdentifier)!
+                        .Value);
+
+            bool isAdmin =
+                User.IsInRole(Roles.Admin);
+
+            if (!isAdmin &&
+                borrowing.UserId != currentUserId)
+            {
+                return Forbid();
+            }
+
             await _borrowingService
                 .UpdateBorrowing(id, dto);
 
-            return Ok("Borrowing Updated");
+            return NoContent();
         }
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         [HttpPost("returnBookBy{id}", Name = "ReturnBook")]
         public async Task<IActionResult> ReturnBook(int id)
         {
+            var borrowing =
+                    await _borrowingService
+                        .GetBorrowingById(id);
+
+            if (borrowing == null)
+                return NotFound();
+
+            var currentUserId =
+                int.Parse(
+                    User.FindFirst(ClaimTypes.NameIdentifier)!
+                        .Value);
+
+            bool isAdmin =
+                User.IsInRole(Roles.Admin);
+
+            if (!isAdmin &&
+                borrowing.UserId != currentUserId)
+            {
+                return Forbid();
+            }
+
             await _borrowingService.ReturnBook(id);
 
-            return Ok("Book Returned Successfully");
+            return NoContent();
         }
         [Authorize(Roles = $"{Roles.Admin}")]
         [HttpDelete("DeleteBorrowings{id}", Name = "DeleteBorrowing")]
