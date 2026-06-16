@@ -25,56 +25,44 @@ namespace LibraryApi.Controllers
             return Ok(await _memberService.GetAllMembers());
         }
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
-        [HttpGet("GetMemberBy{id}", Name = "GetMemberByID")]
-        public async Task<IActionResult> GetMemberById(int id)
+        [HttpGet("Me", Name = "GetMyMember")]
+        public async Task<IActionResult> GetMemberById()
         {
-            var member =
-                await _memberService.GetMemberById(id);
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-            if (member == null)
+            var member = await _memberService.GetByUserId(currentUserId);
+
+            if (member == null )
                 return NotFound();
-
-            var currentUserId =
-                int.Parse(
-                    User.FindFirst(ClaimTypes.NameIdentifier)!
-                        .Value);
-
-            bool isAdmin =
-                User.IsInRole(Roles.Admin);
-
-            if (!isAdmin &&
-                member.UserId != currentUserId)
-            {
-                return Forbid();
-            }
-
-            return Ok(member);
-        }
-        [Authorize(Roles = $"{Roles.Admin}")]
-        [HttpPost("AddMemeber", Name = "AddMemeber")]
-        public async Task<IActionResult> AddMember(
-            CreateMemberDTO dto)
-        {
-            await _memberService.AddMember(dto);
-
-            return Ok("Member Created Successfully");
+            else
+                return Ok(member);
         }
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
-        [HttpPut("UpdateMemeberBy{id}", Name = "UpdateMemeberByID")]
-        public async Task<IActionResult> UpdateMember(
-            int id,
-            UpdateMemberDTO dto)
+        [HttpPost("AddMemeber", Name = "AddMemeber")]
+        public async Task<IActionResult> AddMember(CreateMemberDTO dto)
         {
-            var member =
-                    await _memberService.GetMemberById(id);
+            var currentUserId =
+                int.Parse(
+                    User.FindFirst(
+                        ClaimTypes.NameIdentifier)!
+                        .Value);
+
+            await _memberService.AddMember(
+                currentUserId,
+                dto);
+
+            return Ok();
+        }
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
+        [HttpPut("UpdateMyInfomationMember", Name = "UpdateMyInformationMemeber")]
+        public async Task<IActionResult> UpdateMember(UpdateMemberDTO dto)
+        {
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var member = await _memberService.GetByUserId(currentUserId);
 
             if (member == null)
                 return NotFound();
 
-            var currentUserId =
-                int.Parse(
-                    User.FindFirst(ClaimTypes.NameIdentifier)!
-                        .Value);
 
             bool isAdmin =
                 User.IsInRole(Roles.Admin);
@@ -85,7 +73,7 @@ namespace LibraryApi.Controllers
                 return Forbid();
             }
 
-            await _memberService.UpdateMember(id, dto);
+            await _memberService.UpdateMember(member.Id, dto);
 
             return NoContent();
         }
@@ -97,20 +85,18 @@ namespace LibraryApi.Controllers
 
             return Ok("Member Deleted Successfully");
         }
-        [HttpPut("UpdateUserProfileByUser{id}", Name = "UpdateUserProfileByUserID")]
-        public async Task<IActionResult> UpdateMyProfile([FromBody] UpdateUserProfileDTO dto)
-        {
-            var currentUserId =
-                int.Parse(
-                    User.FindFirst(ClaimTypes.NameIdentifier)!
-                        .Value);
-
-            await _userProfileService
-                .UpdateProfile(
-                    currentUserId,
-                    dto);
-
-            return NoContent();
-        }
+        //[HttpPut("UpdateUserProfileByUser{id}", Name = "UpdateUserProfileByUserID")]
+        //public async Task<IActionResult> UpdateMyProfile([FromBody] UpdateUserProfileDTO dto)
+        //{
+        //    var currentUserId =
+        //        int.Parse(
+        //            User.FindFirst(ClaimTypes.NameIdentifier)!
+        //                .Value);
+        //    await _userProfileService
+        //        .UpdateProfile(
+        //            currentUserId,
+        //            dto);
+        //    return NoContent();
+        //}
     }
 }

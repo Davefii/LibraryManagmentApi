@@ -259,7 +259,7 @@ namespace BusinessLayer.DTOs
         [MaxLength(20)]  public string? Phone { get; set; }
         [MaxLength(200)] public string? Address { get; set; }
         [Required] public DateTime MembershipExpiryDate { get; set; }
-        [Required] public int UserID { get; set; }
+        //[Required] public int UserID { get; set; }
     }
 
     public class UpdateMemberDTO
