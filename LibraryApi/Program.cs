@@ -1,12 +1,15 @@
 using BusinessLayer.Services;
 using DataAccessLayer.Context;
+using DataAccessLayer.Entities;
 using DataAccessLayer.Repositories;
 using LibraryApi;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.OpenApi.Models;
+using System.Text;
+using System.Threading.RateLimiting;
 var builder = WebApplication.CreateBuilder(args);
 
 var jwtSecret =
@@ -53,8 +56,27 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-// Add services to the container.
+//RateLimiting
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 
+    options.AddPolicy("AuthLimiter", httpContext =>
+    {
+        var ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: ip,
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            });
+    });
+});
+
+// Add services to the container.
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -137,6 +159,9 @@ builder.Services.AddScoped<CategoryService>();
 //UserRepository and UserService are added to the DI container with Scoped lifetime, which means a new instance will be created for each HTTP request.
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>();
+//RefreshToken
+builder.Services.AddScoped<RefreshTokenRepository>();
+builder.Services.AddScoped<RefreshTokenService>();
 //UserProfileRepository and UserProfileService are added to the DI container with Scoped lifetime, which means a new instance will be created for each HTTP request.
 builder.Services.AddScoped<UserProfileRepository>();
 builder.Services.AddScoped<UserProfileService>();
@@ -149,7 +174,8 @@ builder.Services.AddScoped<BorrowingService>();
 //Dashbaord
 builder.Services.AddScoped<DashbaordService>();
 
-
+builder.Services.AddScoped<AuditRepository>();
+builder.Services.AddScoped<AuditService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Librarypolicy",
@@ -179,6 +205,16 @@ app.UseHttpsRedirection();
 
 //app.UseMiddleware<ApiKeyMiddleware>();
 
+app.UseRateLimiter();
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode == StatusCodes.Status429TooManyRequests)
+    {
+        await context.Response.WriteAsync("Too many login attempts. Please try again later.");
+    }
+});
 
 app.UseAuthorization();
 

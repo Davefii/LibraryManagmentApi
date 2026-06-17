@@ -25,6 +25,14 @@ namespace BusinessLayer.DTOs
         public string? Address { get; set; }
     }
 
+    public class TokenResponseDTO
+    {
+        [Required]
+        public string AccessToken { get; set; }
+        [Required]
+        public string RefreshToken { get; set; }
+    }
+
     public class LoginRequestDTO
     {
         [Required][EmailAddress]
@@ -33,11 +41,20 @@ namespace BusinessLayer.DTOs
         public string Password { get; set; } = null!;
     }
 
-    public class AuthResponseDTO
+    public class RefreshRequestDTO
     {
-        public string AccessToken { get; set; } = null!;
-        public string RefreshToken { get; set; } = null!;
-        public UserResponseDTO User { get; set; } = null!;
+        [Required]
+        public string RefreshToken { get; set; }
+        [Required]
+        public string Email { get; set; }
+    }
+
+    public class LogoutRequest
+    {
+        [Required]
+        public string Email { get; set; }
+        [Required]
+        public string RefreshToken { get; set; }
     }
 
     public class ChangePasswordDTO

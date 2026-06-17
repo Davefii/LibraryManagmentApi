@@ -53,38 +53,38 @@ namespace LibraryApi.Controllers
             return Ok(borrowing);
         }
 
-        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
-        [HttpGet("{memberId}/history")]
-        public async Task<IActionResult>
-    GetBorrowingHistory(int memberId)
-        {
-            var member =
-                await _memberService
-                    .GetMemberById(memberId);
+    //    [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
+    //    [HttpGet("{memberId}/history")]
+    //    public async Task<IActionResult>
+    //GetBorrowingHistory(int memberId)
+    //    {
+    //        var member =
+    //            await _memberService
+    //                .GetMemberById(memberId);
 
-            if (member == null)
-                return NotFound();
+    //        if (member == null)
+    //            return NotFound();
 
-            var currentUserId =
-                int.Parse(
-                    User.FindFirst(ClaimTypes.NameIdentifier)!
-                        .Value);
+    //        var currentUserId =
+    //            int.Parse(
+    //                User.FindFirst(ClaimTypes.NameIdentifier)!
+    //                    .Value);
 
-            bool isAdmin =
-                User.IsInRole(Roles.Admin);
+    //        bool isAdmin =
+    //            User.IsInRole(Roles.Admin);
 
-            if (!isAdmin &&
-                member.UserId != currentUserId)
-            {
-                return Forbid();
-            }
+    //        if (!isAdmin &&
+    //            member.UserId != currentUserId)
+    //        {
+    //            return Forbid();
+    //        }
 
-            var history =
-                await _borrowingService
-                    .GetMemberBorrowings(memberId);
+    //        var history =
+    //            await _borrowingService
+    //                .GetMemberBorrowings(memberId);
 
-            return Ok(history);
-        }
+    //        return Ok(history);
+    //    }
 
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         [HttpPost("AddBorrowing", Name = "AddBorrowing")]

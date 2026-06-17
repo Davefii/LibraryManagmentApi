@@ -32,6 +32,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<UserProfile> UserProfiles { get; set; }
 
+    public DbSet<AuditLog> AuditLogs { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

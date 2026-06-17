@@ -30,6 +30,7 @@ namespace BusinessLayer.Services
             return members.Select(member => new MemberResponseDTO
             {
                 Id = member.Id,
+                UserId = member.UserId,
                 Name = member.Name,
                 Phone = member.Phone,
                 Address = member.Address,
