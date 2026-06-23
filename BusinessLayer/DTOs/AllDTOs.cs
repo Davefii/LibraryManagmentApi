@@ -303,6 +303,7 @@ namespace BusinessLayer.DTOs
     public class MemberForBorrowingsDTO
     {
         public int Id { get; set; }
+        public int UserId { get; set; }
         public string Name { get; set; } = null!;
         public DateTime MembershipExpiryDate { get; set; }
         public bool IsActive { get; set; }

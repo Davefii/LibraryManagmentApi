@@ -67,6 +67,7 @@ namespace BusinessLayer.Services
             return new MemberForBorrowingsDTO
             {
                 Id = member.Id,
+                UserId = member.UserId,
                 Name = member.Name,
                 MembershipExpiryDate = member.MembershipExpiryDate,
                 IsActive = member.IsActive

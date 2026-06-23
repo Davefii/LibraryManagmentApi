@@ -14,15 +14,18 @@ namespace BusinessLayer.Services
         private readonly BorrowingRepository _borrowingRepository;
         private readonly MemberService _memberService;
         private readonly BookRepository _bookRepository;
+        private readonly AuditService _auditService;
 
         public BorrowingService(
             BorrowingRepository borrowingRepository,
             MemberService memberService,
-            BookRepository bookRepository)
+            BookRepository bookRepository,
+            AuditService auditService)
         {
             _borrowingRepository = borrowingRepository;
             _memberService = memberService;
             _bookRepository = bookRepository;
+            _auditService = auditService;
         }
 
         public async Task<List<OverdueBorrowingDTO>>GetOverdueBorrowings()
@@ -154,6 +157,11 @@ namespace BusinessLayer.Services
             }
 
             await _borrowingRepository.AddAsync(borrowing);
+            await _auditService.LogAsync(
+            memeber.UserId,
+            "BORROW_BOOK",
+            "BORROWING",
+            $"Member borrowed book {book.Title}");
             await _bookRepository.UpdateAsync(book);
         }
         
@@ -187,13 +195,27 @@ namespace BusinessLayer.Services
             if (book == null)
                 throw new Exception("Book Not Found");
 
+            var member =
+                await _memberService
+                    .GetMemberById(
+                        borrowing.MemberId);
+
+            if (member == null)
+                throw new Exception(
+                    "Member Not Found");
+
+            await _auditService.LogAsync(
+            member.UserId,
+            "RETURN_BOOK",
+            "BORROWING",
+            $"Member returned book {book.Title}");
+
             borrowing.IsReturned = true;
             borrowing.ReturnDate = DateTime.UtcNow;
 
             book.AvailableCopies++;
 
             book.IsAvailable = true;
-
             await _bookRepository.UpdateAsync(book);
 
             await _borrowingRepository.UpdateAsync(borrowing);
