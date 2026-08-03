@@ -36,7 +36,8 @@ namespace BusinessLayer.Services
                 LastName = dto.LastName,
                 Biography = dto.Biography,
                 Nationality = dto.Nationality,
-                BirthDate = dto.BirthDate
+                BirthDate = dto.BirthDate,
+                ImageAuthor = dto.ImageAuthor
             };
 
             await _authorRepository.AddAsync(author);
@@ -54,6 +55,7 @@ namespace BusinessLayer.Services
             author.Biography = dto.Biography;
             author.Nationality = dto.Nationality;
             author.BirthDate = dto.BirthDate;
+            author.ImageAuthor = dto.ImageAuthor;
 
             await _authorRepository.UpdateAsync(author);
         }

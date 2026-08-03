@@ -173,9 +173,11 @@ builder.Services.AddScoped<BorrowingRepository>();
 builder.Services.AddScoped<BorrowingService>();
 //Dashbaord
 builder.Services.AddScoped<DashbaordService>();
-
+// Auditing
 builder.Services.AddScoped<AuditRepository>();
 builder.Services.AddScoped<AuditService>();
+//ImageService
+builder.Services.AddScoped<ImageService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Librarypolicy",
@@ -215,6 +217,8 @@ app.Use(async (context, next) =>
         await context.Response.WriteAsync("Too many login attempts. Please try again later.");
     }
 });
+
+app.UseStaticFiles();
 
 app.UseAuthorization();
 

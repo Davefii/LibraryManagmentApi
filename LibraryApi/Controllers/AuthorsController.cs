@@ -1,20 +1,26 @@
-﻿using BusinessLayer.DTOs;
+﻿using Azure.Core;
+using BusinessLayer.DTOs;
 using BusinessLayer.Services;
+using BusinessLayer.Services.Interfaces;
+using LibraryApi.Requests;
+using LibraryApi.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryApi.Controllers
 {
+    // List Books where on Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AuthorsController : Controller
     {
         private readonly AuthorService _authorService;
-
-        public AuthorsController(AuthorService authorService)
+        private readonly ImageService _imageService;
+        public AuthorsController(AuthorService authorService, ImageService imageService)
         {
             _authorService = authorService;
+            _imageService = imageService;
         }
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         [HttpGet("ListAuthors", Name = "ListAuthors")]
@@ -35,8 +41,28 @@ namespace LibraryApi.Controllers
         }
         [Authorize(Roles = $"{Roles.Admin}")]
         [HttpPost("AddAuthor", Name = "AddAuthor")]
-        public async Task<IActionResult> AddAuthor(CreateAuthorDTO dto)
+        public async Task<IActionResult> AddAuthor([FromForm] CreateAuthorRequest request)
         {
+            string? imagePath = null;
+
+            if (request.ImageAuthor != null)
+            {
+                imagePath = await _imageService.SaveImageAsync(
+                    request.ImageAuthor,
+                    ImageFolders.Authors);
+            }
+
+            var dto = new CreateAuthorDTO
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Biography = request.Biography,
+                Nationality = request.Nationality,
+                BirthDate = request.BirthDate,
+                // List Books where
+                ImageAuthor = imagePath
+            };
+
             await _authorService.AddAuthor(dto);
 
             return Ok();
@@ -44,9 +70,39 @@ namespace LibraryApi.Controllers
         [Authorize(Roles = $"{Roles.Admin}")]
         [HttpPut("UpdateAuthor{id}", Name = "UpdateAuthorbyID")]
         public async Task<IActionResult> UpdateAuthor(
+            [FromForm]
             int id,
-            UpdateAuthorDTO dto)
+            UpdateAuthorRequest request)
         {
+            var currentAuthor =
+        await _authorService.GetAuthorById(id);
+
+            if (currentAuthor == null)
+                return NotFound();
+
+            string? imagePath = currentAuthor.ImageAuthor;
+
+            if (request.ImageAuthor != null)
+            {
+                var newImage =
+                    await _imageService.SaveImageAsync(
+                        request.ImageAuthor,
+                        ImageFolders.Authors);
+
+                _imageService.DeleteImage(currentAuthor.ImageAuthor);
+
+                imagePath = newImage;
+            }
+
+            var dto = new UpdateAuthorDTO
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Biography = request.Biography,
+                Nationality = request.Nationality,
+                BirthDate = request.BirthDate,
+                ImageAuthor = imagePath
+            };
             await _authorService.UpdateAuthor(id, dto);
 
             return Ok();
@@ -55,6 +111,13 @@ namespace LibraryApi.Controllers
         [HttpDelete("DeleteAuthor{id}", Name = "DeleteAuthorbyID")]
         public async Task<IActionResult> DeleteAuthor(int id)
         {
+            var author = await _authorService.GetAuthorById(id);
+
+            if (author == null)
+                return NotFound();
+
+            _imageService.DeleteImage(author.ImageAuthor);
+
             await _authorService.DeleteAuthor(id);
 
             return Ok();

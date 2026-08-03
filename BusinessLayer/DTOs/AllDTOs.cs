@@ -1,8 +1,4 @@
-// =============================================
-// Library Management System — All DTOs
-// Folder: BusinessLayer/DTOs/
-// =============================================
-
+using Microsoft.AspNetCore.Http;
 using DataAccessLayer.Entities;
 using System.ComponentModel.DataAnnotations;
 
@@ -136,6 +132,7 @@ namespace BusinessLayer.DTOs
         [Required][MaxLength(100)] public string LastName { get; set; } = null!;
         [MaxLength(1000)]          public string? Biography { get; set; }
         [MaxLength(100)]           public string? Nationality { get; set; }
+        public string? ImageAuthor { get; set; }
         public DateOnly? BirthDate { get; set; }
     }
 
@@ -145,6 +142,7 @@ namespace BusinessLayer.DTOs
         [MaxLength(100)] public string? LastName { get; set; }
         [MaxLength(1000)] public string? Biography { get; set; }
         [MaxLength(100)] public string? Nationality { get; set; }
+        public string? ImageAuthor { get; set; }
         public DateOnly? BirthDate { get; set; }
     }
 
@@ -156,6 +154,7 @@ namespace BusinessLayer.DTOs
         public string? Biography { get; set; }
         public string? Nationality { get; set; }
         public DateOnly? BirthDate { get; set; }
+        public string? ImageAuthor { get; set; }
         public int TotalBooks { get; set; }
     }
     public class AuthorSummaryDTO
@@ -218,6 +217,8 @@ namespace BusinessLayer.DTOs
 
         public int? PublishYear { get; set; }
 
+        public string? CoverImage { get; set; }
+
         public List<AuthorSummaryDTO> Authors { get; set; }
             = new();
         public List<CategorySummaryDTO> Categories { get; set; } = new();
@@ -237,6 +238,7 @@ namespace BusinessLayer.DTOs
         [MaxLength(1000)]          public string? Description { get; set; }
         public int? PublishYear { get; set; }
         [Required] public int CopiesCount { get; set; }
+        public string? CoverImage { get; set; }
         [Required] public List<int> AuthorIds { get; set; } = new();
         [Required] public List<int> CategoryIds { get; set; } = new();
     }
@@ -250,6 +252,7 @@ namespace BusinessLayer.DTOs
         public int TotalCopies { get; set; }
         public int AvailableCopies { get; set; }
         public bool IsAvailable { get; set; }
+        public string? CoverImage { get; set; }
         public List<int>? AuthorIds { get; set; }
         public List<int>? CategoryIds { get; set; }
     }
@@ -264,6 +267,7 @@ namespace BusinessLayer.DTOs
         public int CopiesCount { get; set; }
         public int AvailableCopies { get; set; }
         public bool IsAvailable { get; set; }
+        public string? CoverImage { get; set; }
         public List<AuthorSummaryDTO> Authors { get; set; } = new();
         public List<CategorySummaryDTO> Categories { get; set; } = new();
         public DateTime CreatedAt { get; set; }

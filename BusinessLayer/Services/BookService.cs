@@ -31,7 +31,7 @@ namespace BusinessLayer.Services
                 AvailableCopies = book.AvailableCopies,
                 Description = book.Description,
                 PublishYear = book.PublishYear,
-
+                CoverImage = book.CoverImage,
                 Authors = book.Authors.Select(a => new AuthorSummaryDTO
                 {
                     Id = a.Id,
@@ -59,6 +59,7 @@ namespace BusinessLayer.Services
                 ISBN = book.Isbn,
                 Description = book.Description,
                 PublishYear = book.PublishYear,
+                CoverImage = book.CoverImage,
                 Authors = book.Authors.Select(a => new AuthorSummaryDTO
                 {
                     Id = a.Id,
@@ -84,6 +85,7 @@ namespace BusinessLayer.Services
                 ISBN = book.Isbn,
                 Description = book.Description,
                 PublishYear = book.PublishYear,
+                CoverImage = book.CoverImage,
                 Authors = book.Authors.Select(a => new AuthorSummaryDTO
                 {
                     Id = a.Id,
@@ -109,6 +111,7 @@ namespace BusinessLayer.Services
                 ISBN = book.Isbn,
                 Description = book.Description,
                 PublishYear = book.PublishYear,
+                CoverImage = book.CoverImage,
                 Authors = book.Authors.Select(a => new AuthorSummaryDTO
                 {
                     Id = a.Id,
@@ -128,8 +131,9 @@ namespace BusinessLayer.Services
                 TotalCopies = bookDto.CopiesCount,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
+                CoverImage = bookDto.CoverImage,
                 Authors = new List<Author>(),
-                //Categories = new List<Category>()
+                Categories = new List<Category>()
             };
             await _bookRepository.AddAsync(book);
         }
@@ -148,8 +152,9 @@ namespace BusinessLayer.Services
             book.AvailableCopies = dto.AvailableCopies;
             book.IsAvailable = dto.IsAvailable;
             book.UpdatedAt = DateTime.UtcNow;
+            book.CoverImage = dto.CoverImage;
             book.Authors = new List<Author>();
-            //book.Categories = new List<Category>();
+            book.Categories = new List<Category>();
             await _bookRepository.UpdateAsync(book);
         }
         public async Task DeleteBook(int id)
@@ -160,6 +165,8 @@ namespace BusinessLayer.Services
                 throw new Exception("Book Not Found");
 
             await _bookRepository.DeleteAsync(book);
+
+
         }
     }
 }

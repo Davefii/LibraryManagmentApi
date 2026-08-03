@@ -17,5 +17,7 @@ public partial class Author
 
     public DateOnly? BirthDate { get; set; }
 
+    public string? ImageAuthor { get; set; }
+
     public virtual ICollection<Book> Books { get; set; } = new List<Book>();
 }

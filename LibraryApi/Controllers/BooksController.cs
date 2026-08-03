@@ -1,7 +1,11 @@
 ﻿
+using Azure.Core;
 using BusinessLayer.DTOs;
 using BusinessLayer.Services;
+using BusinessLayer.Services.Interfaces;
 using DataAccessLayer.Entities;
+using LibraryApi.Requests;
+using LibraryApi.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,9 +17,11 @@ namespace LibraryApi.Controllers
     public class BooksController : Controller
     {
         private readonly BookService _bookservice;
-        public BooksController(BookService bookService)
+        private readonly ImageService _imageService;
+        public BooksController(BookService bookService, ImageService imageService)
         {
             _bookservice = bookService;
+            _imageService = imageService;
         }
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         [HttpGet("ListBooks", Name = "GetallBooks")]
@@ -54,16 +60,65 @@ namespace LibraryApi.Controllers
         }
         [Authorize(Roles = $"{Roles.Admin}")]
         [HttpPost("AddBook", Name = "AddBook")]
-        public async Task<IActionResult> AddBook(CreateBookDTO book)
+        public async Task<IActionResult> AddBook([FromForm] CreateBookRequest request)
         {
-            await _bookservice.AddBook(book);
+            string? imagePath = null;
+
+            if (request.CoverImage != null)
+            {
+                imagePath =
+                    await _imageService.SaveImageAsync(
+                        request.CoverImage,
+                        ImageFolders.Books);
+            }
+            var bookdto = new CreateBookDTO
+            {
+                Title = request.Title,
+                ISBN = request.ISBN,
+                Description = request.Description,
+                PublishYear = request.PublishYear,
+                CopiesCount = request.CopiesCount,
+                // Where author and category
+                CoverImage = imagePath
+            };
+            await _bookservice.AddBook(bookdto);
 
             return Ok();
         }
         [Authorize(Roles = $"{Roles.Admin}")]
         [HttpPut("UpdateBookBy{Id}", Name = "UpdateBookByid")]
-        public async Task<IActionResult> UpdateBook(int Id,UpdateBookDTO dto)
+        public async Task<IActionResult> UpdateBook([FromForm] int Id, UpdateBookRequest request)
         {
+            var currentBook = await _bookservice.GetBookById(Id);
+
+            if (currentBook == null)
+                return NotFound();
+
+            string? imagePath = currentBook.CoverImage;
+
+            if (request.CoverImage != null)
+            {
+
+                var newImage =
+                    await _imageService.SaveImageAsync(
+                        request.CoverImage,
+                        ImageFolders.Books);
+
+                _imageService.DeleteImage(currentBook.CoverImage);
+                imagePath = newImage;
+            }
+            var dto = new UpdateBookDTO
+            {
+                Title = request.Title,
+                ISBN = request.ISBN,
+                Description = request.Description,
+                PublishYear = request.PublishYear,
+                TotalCopies = request.TotalCopies,
+                AvailableCopies = request.AvailableCopies,
+                IsAvailable = request.IsAvailable,
+                CoverImage = imagePath
+                // Where author and category
+            };
             await _bookservice.UpdateBook(Id, dto);
 
             return Ok("Book Updated Successfully");
@@ -72,7 +127,17 @@ namespace LibraryApi.Controllers
         [HttpDelete("DeleteBookBy{ID}", Name = "DeleteBookByID")]
         public async Task<IActionResult> DeleteBook(int ID)
         {
-            await _bookservice.DeleteBook(ID);
+
+            var book = await _bookservice.GetBookById(ID);
+
+            if (book == null)
+                return NotFound();
+
+            _imageService.DeleteImage(book.CoverImage);
+
+            await _bookservice.DeleteBook(book.Id);
+
+            
 
             return Ok("Book Deleted Successfully");
         }

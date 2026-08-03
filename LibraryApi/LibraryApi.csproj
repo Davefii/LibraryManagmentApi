@@ -20,4 +20,9 @@
     <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\Books\" />
+    <Folder Include="wwwroot\uploads\Authors\" />
+  </ItemGroup>
+
 </Project>
