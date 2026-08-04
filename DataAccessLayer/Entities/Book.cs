@@ -27,9 +27,9 @@ public partial class Book
 
     public string? CoverImage { get; set; }
 
-    public virtual IEnumerable<Borrowing> Borrowings { get; set; } = new List<Borrowing>();
+    public virtual ICollection<Borrowing> Borrowings { get; set; } = new List<Borrowing>();
 
-    public virtual IEnumerable<Author> Authors { get; set; } = new List<Author>();
+    public virtual ICollection<Author> Authors { get; set; } = new List<Author>();
 
-    public virtual IEnumerable<Category> Categories { get; set; } = new List<Category>();
+    public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
 }

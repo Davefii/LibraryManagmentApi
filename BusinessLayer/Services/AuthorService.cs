@@ -18,14 +18,40 @@ namespace BusinessLayer.Services
             _authorRepository = authorRepository;
         }
 
-        public async Task<List<Author>> GetAllAuthors()
+        public async Task<List<AuthorResponseDTO>> GetAllAuthors()
         {
-            return await _authorRepository.GetAllAsync();
+            var Authors = await _authorRepository.GetAllAsync();
+            return Authors.Select(authors => new AuthorResponseDTO
+            {
+                Id = authors.Id,
+                FirstName = authors.FirstName,
+                LastName = authors.LastName,
+                Biography = authors.Biography,
+                Nationality = authors.Nationality,
+                BirthDate = authors.BirthDate,
+                ImageAuthor = authors.ImageAuthor,
+                Books = authors.Books.Select(book => new Book
+                {
+                    Id = book.Id,
+                    Title = book.Title,
+                    Isbn = book.Isbn,
+                    TotalCopies = book.TotalCopies,
+                    AvailableCopies = book.AvailableCopies,
+                    Description = book.Description,
+                    PublishYear = book.PublishYear,
+                    CoverImage = book.CoverImage,
+                }).ToList(),
+            }).ToList();
         }
 
         public async Task<Author?> GetAuthorById(int id)
         {
             return await _authorRepository.GetByIdAsync(id);
+        }
+        
+        public async Task<bool> isExistAuthor(int id)
+        {
+            return await _authorRepository.ExistsAuthorAsync(id);
         }
 
         public async Task AddAuthor(CreateAuthorDTO dto)

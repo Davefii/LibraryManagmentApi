@@ -21,7 +21,7 @@ namespace DataAccessLayer.Repositories
         public async Task<List<Author>> GetAllAsync()
         {
             return await _context.Authors
-                .AsNoTracking()
+                .AsNoTracking().Include(B => B.Books)
                 .ToListAsync();
         }
 
@@ -29,6 +29,17 @@ namespace DataAccessLayer.Repositories
         {
             return await _context.Authors
                 .FindAsync(id);
+        }
+
+        public async Task<bool> ExistsAuthorAsync(int id)
+        {
+            return await _context.Authors
+                .AnyAsync(a => a.Id == id);
+        }
+
+        public async Task<Author?> GetAuthorByNameAsync(string AuthorName)
+        {
+            return await _context.Authors.FirstOrDefaultAsync(a => a.FullName == AuthorName);
         }
 
         public async Task AddAsync(Author author)

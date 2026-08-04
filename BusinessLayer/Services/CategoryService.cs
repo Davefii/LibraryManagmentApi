@@ -46,6 +46,12 @@ namespace BusinessLayer.Services
             };
         }
 
+        public async Task<bool> isExistCategory(int id)
+        {
+            return await _categoryRepository.ExistsAsync(id);
+        }
+
+
         public async Task AddCategory(CreateCategoryDTO dto)
         {
             var category = new Category

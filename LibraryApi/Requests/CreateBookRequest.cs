@@ -1,18 +1,20 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 namespace LibraryApi.Requests
 {
     public class CreateBookRequest
     {
-        public string Title { get; set; } = string.Empty;
-
-        public string ISBN { get; set; } = string.Empty;
-
-        public string Description { get; set; } = string.Empty;
-
-        public int PublishYear { get; set; }
-
-        public int CopiesCount { get; set; }
-
-        public IFormFile? CoverImage { get; set; }
+        [Required] public string Title { get; set; }
+        [Required] public string ISBN { get; set; }
+        [Required] public string Description { get; set; }
+        [Required] public int PublishYear { get; set; }
+        [Required] public int TotalCopies { get; set; }
+        [Required] public int AvailableCopies { get; set; }
+        [Required] public bool IsAvailable { get; set; }
+        [Required]  public IFormFile? CoverImage { get; set; }
+        [Required] public int AuthorID { get; set; }
+        [Required] public int CategoryID { get; set; }
+        [Required] public DateTime CreatedAt { get; set; }
+        [Required] public DateTime? UpdatedAt { get; set; }
     }
 }

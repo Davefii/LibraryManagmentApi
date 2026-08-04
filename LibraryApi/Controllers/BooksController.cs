@@ -18,10 +18,14 @@ namespace LibraryApi.Controllers
     {
         private readonly BookService _bookservice;
         private readonly ImageService _imageService;
-        public BooksController(BookService bookService, ImageService imageService)
+        private readonly AuthorService _author;
+        private readonly CategoryService _category;
+        public BooksController(BookService bookService, ImageService imageService, AuthorService author, CategoryService category)
         {
             _bookservice = bookService;
             _imageService = imageService;
+            _author = author;
+            _category = category;
         }
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         [HttpGet("ListBooks", Name = "GetallBooks")]
@@ -71,15 +75,22 @@ namespace LibraryApi.Controllers
                         request.CoverImage,
                         ImageFolders.Books);
             }
+
+
             var bookdto = new CreateBookDTO
             {
                 Title = request.Title,
                 ISBN = request.ISBN,
                 Description = request.Description,
                 PublishYear = request.PublishYear,
-                CopiesCount = request.CopiesCount,
-                // Where author and category
-                CoverImage = imagePath
+                TotalCopies = request.TotalCopies,
+                AvailableCopies = request.AvailableCopies,
+                IsAvailable = request.IsAvailable,
+                CoverImage = imagePath,
+                AuthorID = request.AuthorID,
+                CategoryID = request.CategoryID,
+                CreatedAt = request.CreatedAt,
+                UpdatedAt = request.UpdatedAt
             };
             await _bookservice.AddBook(bookdto);
 
@@ -107,6 +118,7 @@ namespace LibraryApi.Controllers
                 _imageService.DeleteImage(currentBook.CoverImage);
                 imagePath = newImage;
             }
+
             var dto = new UpdateBookDTO
             {
                 Title = request.Title,
@@ -116,8 +128,11 @@ namespace LibraryApi.Controllers
                 TotalCopies = request.TotalCopies,
                 AvailableCopies = request.AvailableCopies,
                 IsAvailable = request.IsAvailable,
-                CoverImage = imagePath
-                // Where author and category
+                CoverImage = imagePath,
+                AuthorID = request.AuthorID,
+                CategoryID = request.CategoryID,
+                
+                UpdatedAt = request.UpdatedAt
             };
             await _bookservice.UpdateBook(Id, dto);
 

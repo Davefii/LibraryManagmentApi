@@ -156,6 +156,7 @@ namespace BusinessLayer.DTOs
         public DateOnly? BirthDate { get; set; }
         public string? ImageAuthor { get; set; }
         public int TotalBooks { get; set; }
+        public virtual IEnumerable<Book> Books { get; set; } = new List<Book>();
     }
     public class AuthorSummaryDTO
     {
@@ -205,7 +206,7 @@ namespace BusinessLayer.DTOs
     //}
 
     // BOOK DTOs
-    public class BookForReadOnlyDTO
+    public class BookForReadOnlyDTOSmall
     {
         public int Id { get; set; }
 
@@ -216,6 +217,21 @@ namespace BusinessLayer.DTOs
         public string Description { get; set; }
 
         public int? PublishYear { get; set; }
+
+        public string? CoverImage { get; set; }
+
+    }
+
+    public class BookForReadOnlyDTO
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = null!;
+        public string ISBN { get; set; } = null!;
+        public string? Description { get; set; }
+        public int? PublishYear { get; set; }
+        public int CopiesCount { get; set; }
+        public int AvailableCopies { get; set; }
+        public bool IsAvailable { get; set; }
 
         public string? CoverImage { get; set; }
 
@@ -233,14 +249,18 @@ namespace BusinessLayer.DTOs
     public class CreateBookDTO
     {
         public int Id { get;}
-        [Required][MaxLength(200)] public string Title { get; set; } = null!;
-        [Required][MaxLength(50)]  public string ISBN { get; set; } = null!;
-        [MaxLength(1000)]          public string? Description { get; set; }
-        public int? PublishYear { get; set; }
-        [Required] public int CopiesCount { get; set; }
-        public string? CoverImage { get; set; }
-        [Required] public List<int> AuthorIds { get; set; } = new();
-        [Required] public List<int> CategoryIds { get; set; } = new();
+        public string Title { get; set; }
+        public string ISBN { get; set; }
+        public string Description { get; set; }
+        public int PublishYear { get; set; }
+        public int TotalCopies { get; set; }
+        public int AvailableCopies { get; set; }
+        public bool IsAvailable { get; set; }
+        public string CoverImage { get; set; }
+        [Required] public int AuthorID { get; set; }
+        [Required] public int CategoryID { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 
     public class UpdateBookDTO
@@ -253,8 +273,9 @@ namespace BusinessLayer.DTOs
         public int AvailableCopies { get; set; }
         public bool IsAvailable { get; set; }
         public string? CoverImage { get; set; }
-        public List<int>? AuthorIds { get; set; }
-        public List<int>? CategoryIds { get; set; }
+        [Required] public int AuthorID { get; set; }
+        [Required] public int CategoryID { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 
     public class BookResponseDTO
@@ -271,6 +292,7 @@ namespace BusinessLayer.DTOs
         public List<AuthorSummaryDTO> Authors { get; set; } = new();
         public List<CategorySummaryDTO> Categories { get; set; } = new();
         public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 
     // MEMBER DTOs
