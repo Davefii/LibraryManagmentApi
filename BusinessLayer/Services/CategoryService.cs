@@ -26,7 +26,32 @@ namespace BusinessLayer.Services
                 Id = category.Id,
                 Name = category.Name,
                 Description = category.Description,
-                ParentId = category.ParentId
+                ParentId = category.ParentId,
+                Books = category.Books.Select(book => new BookResponseDTO
+                {
+                    Id = book.Id,
+                    Title = book.Title,
+                    ISBN = book.Isbn,
+                    Description = book.Description,
+                    PublishYear = book.PublishYear,
+                    CopiesCount = book.TotalCopies,
+                    AvailableCopies = book.AvailableCopies,
+                    IsAvailable = book.IsAvailable,
+                    CreatedAt = book.CreatedAt,
+                    UpdatedAt = book.UpdatedAt,
+                    CoverImage = book.CoverImage,
+                    Authors = book.Authors.Select(a => new AuthorSummaryDTO
+                    {
+                        Id = a.Id,
+                        FirstName = a.FirstName,
+                        LastName = a.LastName
+                    }).ToList(),
+                    Categories = book.Categories.Select(c => new CategorySummaryDTO
+                    {
+                        Id = c.Id,
+                        Name = c.Name
+                    }).ToList(),
+                }).ToList()
             }).ToList();
         }
 
@@ -42,7 +67,32 @@ namespace BusinessLayer.Services
                 Id = category.Id,
                 Name = category.Name,
                 Description = category.Description,
-                ParentId = category.ParentId
+                ParentId = category.ParentId,
+                Books = category.Books.Select(book => new BookResponseDTO
+                {
+                    Id = book.Id,
+                    Title = book.Title,
+                    ISBN = book.Isbn,
+                    Description = book.Description,
+                    PublishYear = book.PublishYear,
+                    CopiesCount = book.TotalCopies,
+                    AvailableCopies = book.AvailableCopies,
+                    IsAvailable = book.IsAvailable,
+                    CreatedAt = book.CreatedAt,
+                    UpdatedAt = book.UpdatedAt,
+                    CoverImage = book.CoverImage,
+                    Authors = book.Authors.Select(a => new AuthorSummaryDTO
+                    {
+                        Id = a.Id,
+                        FirstName = a.FirstName,
+                        LastName = a.LastName
+                    }).ToList(),
+                    Categories = book.Categories.Select(c => new CategorySummaryDTO
+                    {
+                        Id = c.Id,
+                        Name = c.Name
+                    }).ToList(),
+                }).ToList()
             };
         }
 

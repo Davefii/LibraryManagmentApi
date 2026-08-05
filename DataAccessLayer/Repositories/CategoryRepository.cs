@@ -21,13 +21,13 @@ namespace DataAccessLayer.Repositories
         public async Task<List<Category>> GetAllAsync()
         {
             return await _context.Categories
-                .AsNoTracking()
+                .AsNoTracking().Include(B => B.Books).ThenInclude(A => A.Authors)
                 .ToListAsync();
         }
 
         public async Task<Category?> GetByIdAsync(int id)
         {
-            return await _context.Categories
+            return await _context.Categories.Include(B => B.Books).ThenInclude(A => A.Authors)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
