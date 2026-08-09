@@ -59,6 +59,7 @@ namespace BusinessLayer.Services
 
             if (book == null)
                 return null;
+            else
             return new BookResponseDTO
             {
                 Id = book.Id,
@@ -89,6 +90,7 @@ namespace BusinessLayer.Services
             var book = await _bookRepository.GetByTitleAsync(title);
             if (book == null)
                 return null;
+            else
             return new BookResponseDTO
             {
                 Id = book.Id,
@@ -119,6 +121,7 @@ namespace BusinessLayer.Services
             var book = await _bookRepository.GetByISBNAsync(ISBN);
             if (book == null)
                 return null;
+            else
             return new BookResponseDTO
             {
                 Id = book.Id,

@@ -45,17 +45,17 @@ namespace LibraryApi.Controllers
             return Ok(book);
         }
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
-        [HttpGet("GetBookByName{Titel}", Name = "GetBookByName")]
-        public async Task<IActionResult> GetBookByName(string titel)
+        [HttpGet("GetBookByName/{title}", Name = "GetBookByName")]
+        public async Task<IActionResult> GetBookByName(string title)
         {
-            var book = await _bookservice.GetBookByTitle(titel);
+            var book = await _bookservice.GetBookByTitle(title);
             if (book == null)
                 return NotFound();
             return Ok(book);
         }
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
-        [HttpGet("GetBookByISBN{ISBN}", Name = "GetBookByISBN")]
-        public async Task<IActionResult> GetBookByISBN(string isbn)
+        [HttpGet("GetBookByISBN/{isbn}", Name = "GetBookByISBN")]
+        public async Task<IActionResult> GetBookByISBN([FromRoute] string isbn)
         {
             var book = await _bookservice.GetBookByISBN(isbn);
             if (book == null)
