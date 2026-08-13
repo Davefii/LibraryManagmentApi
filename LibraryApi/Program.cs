@@ -52,6 +52,29 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(jwtSecret))
         };
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var token = context.Request.Cookies["access_token"];
+
+                Console.WriteLine(
+                    $"Access Token Cookie Exists: {!string.IsNullOrEmpty(token)}"
+                );
+                context.Token =
+                    context.Request.Cookies["access_token"];
+
+                return Task.CompletedTask;
+            },
+            OnAuthenticationFailed = context =>
+            {
+                Console.WriteLine(
+                    $"JWT Authentication Failed: {context.Exception.Message}"
+                );
+
+                return Task.CompletedTask;
+            }
+        };
     });
 
 builder.Services.AddAuthorization();
@@ -184,11 +207,12 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins(
-                " https://localhost:7010",
-                "http://localhost:5155"
+                "https://127.0.0.1:5500",
+                "http://127.0.0.1:5500"
             )
                   .AllowAnyHeader()
-                  .AllowAnyMethod();
+                  .AllowAnyMethod()
+                  .AllowCredentials();
         });
 });
 
@@ -202,10 +226,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors("Librarypolicy");
 app.UseHttpsRedirection();
-
-//app.UseMiddleware<ApiKeyMiddleware>();
+app.UseCors("Librarypolicy");
 
 app.UseRateLimiter();
 app.Use(async (context, next) =>
@@ -219,6 +241,8 @@ app.Use(async (context, next) =>
 });
 
 app.UseStaticFiles();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

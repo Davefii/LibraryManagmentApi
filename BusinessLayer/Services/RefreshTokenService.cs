@@ -20,21 +20,25 @@ namespace BusinessLayer.Services
             _refreshTokenRepository = refreshTokenRepository;
         }
 
-        public async Task<User?> ValidateRefreshToken(
-            string email,
-            string refreshToken)
+        public async Task<User?> ValidateRefreshToken(string refreshToken)
         {
-            var user =
+            var tokens = await _refreshTokenRepository.GetActiveTokensAsync();
+
+            var activeToken =
+                tokens.FirstOrDefault(t =>
+                    BCrypt.Net.BCrypt.Verify(
+                        refreshToken,
+                        t.Token));
+
+            return activeToken?.User;
+            /*var user =
                 await _userRepository
                     .GetByEmailAsync(email);
-
             if (user == null)
                 return null;
-
             var tokens =
                 await _refreshTokenRepository
                     .GetByUserIdAsync(user.Id);
-
             var activeToken =
                 tokens.FirstOrDefault(t =>
                     t.RevokedAt == null &&
@@ -42,25 +46,16 @@ namespace BusinessLayer.Services
                     BCrypt.Net.BCrypt.Verify(
                         refreshToken,
                         t.Token));
-
             if (activeToken == null)
                 return null;
-
-            return user;
+            return user;*/
         }
 
-        public async Task RevokeToken(
-            string email,
-            string refreshToken)
+        public async Task RevokeToken(string refreshToken)
         {
-            var user = await _userRepository.GetByEmailAsync(email);
+            var tokens  = await _refreshTokenRepository.GetActiveTokensAsync();
 
-            if (user == null)
-                return;
-
-            var tokens = await _refreshTokenRepository.GetByUserIdAsync(user.Id);
-
-            var token = tokens.FirstOrDefault(t => BCrypt.Net.BCrypt.Verify(refreshToken,t.Token));
+            var token = tokens.FirstOrDefault(t =>BCrypt.Net.BCrypt.Verify(refreshToken,t.Token));
 
             if (token == null)
                 return;

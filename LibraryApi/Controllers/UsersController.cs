@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.DTOs;
 using BusinessLayer.Services;
+using LibraryApi.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -45,6 +46,23 @@ namespace LibraryApi.Controllers
                 return NotFound();
 
             return Ok(user);
+        }
+        [AllowAnonymous]
+        // POST: api/users
+        [HttpPost("CreateUserOnlyMember", Name = "CreateUser")]
+        public async Task<IActionResult> CreateUserForMember([FromBody] CreateUserOnlyForMember dto)
+        {
+            var createDto = new CreateUserDTO
+            {
+                Email = dto.Email,
+                Password = dto.Password,
+                Role = Roles.Member,
+                IsActive = true
+            };
+
+            await _userService.AddUser(createDto);
+
+            return Ok("User Created Successfully");
         }
         [Authorize(Roles = $"{Roles.Admin}")]
         // POST: api/users

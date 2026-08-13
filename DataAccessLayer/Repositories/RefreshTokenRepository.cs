@@ -42,13 +42,22 @@ namespace DataAccessLayer.Repositories
                 .Where(x => x.UserId == userId)
                 .ToListAsync();
         }
-        public async Task<RefreshToken?>GetActiveTokenAsync(int userId)
+        /*public async Task<RefreshToken?>GetActiveTokenAsync(int userId)
         {
             return await _context.RefreshTokens
                 .FirstOrDefaultAsync(x =>
                     x.UserId == userId &&
                     x.RevokedAt == null &&
                     x.ExpiresAt > DateTime.UtcNow);
+        }*/
+        public async Task<List<RefreshToken>> GetActiveTokensAsync()
+        {
+            return await _context.RefreshTokens
+                .Include(x => x.User)
+                .Where(x =>
+                    x.RevokedAt == null &&
+                    x.ExpiresAt > DateTime.UtcNow)
+                .ToListAsync();
         }
     }
 }

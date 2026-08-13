@@ -69,6 +69,7 @@ namespace BusinessLayer.DTOs
 
         public const string Member = "Member";
     }
+
     public class CreateUserDTO
     {
         [Required]

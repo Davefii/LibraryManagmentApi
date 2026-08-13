@@ -139,6 +139,11 @@ namespace BusinessLayer.Services
                     Id = a.Id,
                     FirstName = a.FirstName,
                     LastName = a.LastName,
+                }).ToList(),
+                Categories = book.Categories.Select(c => new CategorySummaryDTO
+                {
+                    Id = c.Id,
+                    Name = c.Name
                 }).ToList()
             };
         }

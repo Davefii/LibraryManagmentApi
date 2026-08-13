@@ -39,6 +39,7 @@ namespace LibraryApi.Controllers
 
         [HttpPost("login")]
         [EnableRateLimiting("AuthLimiter")]
+
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
         {
 
@@ -125,31 +126,54 @@ namespace LibraryApi.Controllers
                 CreatedAt =
                     DateTime.UtcNow
             };
+            Response.Cookies.Append(
+               "access_token",
+               accessToken,
+               new CookieOptions
+               {
+                   HttpOnly = true,
+                   Secure = true,
+                   SameSite = SameSiteMode.None,
+                   Expires = DateTimeOffset.UtcNow.AddMinutes(30)
+               });
 
-             await _refreshTokenService.AddAsync(refreshTokenEntity);
+                       Response.Cookies.Append(
+                           "refresh_token",
+                           refreshToken,
+                           new CookieOptions
+                           {
+                               HttpOnly = true,
+                               Secure = true,
+                               SameSite = SameSiteMode.None,
+                               Expires = DateTimeOffset.UtcNow.AddDays(1)
+                           });
+            await _refreshTokenService.AddAsync(refreshTokenEntity);
             //_logger.LogInformation("User {Email} logged in successfully",user.Email);
             await _auditService.LogAsync(user.Id,"LOGIN","USER",$"User {user.Email} logged in successfully");
-            return Ok(new TokenResponseDTO
+            return Ok(new
             {
-                AccessToken = accessToken,
-                RefreshToken = refreshToken
+                message = "Login successful"
             });
         }
 
         [HttpPost("refresh")]
         [EnableRateLimiting("AuthLimiter")]
-        public async Task<IActionResult> Refresh(RefreshRequestDTO request)
+        public async Task<IActionResult> Refresh()
         {
+            var refreshToken = Request.Cookies["refresh_token"];
+
+            if (string.IsNullOrEmpty(refreshToken))
+                return Unauthorized(
+                    "Refresh token not found.");
+
+
             var user =
                 await _refreshTokenService
-                    .ValidateRefreshToken(
-                        request.Email,
-                        request.RefreshToken);
+                    .ValidateRefreshToken(refreshToken);
 
-            if (user == null)
+            if (user == null || !user.IsActive)
                 return Unauthorized(
                     "Invalid Refresh Token");
-
             var claims = new[]
             {
         new Claim(
@@ -168,6 +192,9 @@ namespace LibraryApi.Controllers
             var jwtSecret =
                 Environment.GetEnvironmentVariable(
                     "LIBRARY_JWT_SECRET");
+            if (string.IsNullOrEmpty(jwtSecret))
+                throw new Exception(
+                    "JWT Secret Not Found");
 
             var key =
                 new SymmetricSecurityKey(
@@ -192,9 +219,7 @@ namespace LibraryApi.Controllers
 
             // Token Rotation
             await _refreshTokenService
-                .RevokeToken(
-                    request.Email,
-                    request.RefreshToken);
+                .RevokeToken(refreshToken);
 
             var newRefreshToken =
                 GenerateRefreshToken();
@@ -209,7 +234,7 @@ namespace LibraryApi.Controllers
                             newRefreshToken),
 
                     ExpiresAt =
-                        DateTime.UtcNow.AddDays(7),
+                        DateTime.UtcNow.AddDays(1),
 
                     CreatedAt =
                         DateTime.UtcNow
@@ -218,27 +243,75 @@ namespace LibraryApi.Controllers
             await _refreshTokenService
                 .AddAsync(refreshTokenEntity);
 
-            return Ok(
-                new TokenResponseDTO
+            // New access token Cookie
+            Response.Cookies.Append(
+                "access_token",
+                accessToken,
+                new CookieOptions
                 {
-                    AccessToken =
-                        accessToken,
-
-                    RefreshToken =
-                        newRefreshToken
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    Expires =
+                        DateTimeOffset.UtcNow.AddMinutes(30)
                 });
+
+
+            // New refresh token Cookie
+            Response.Cookies.Append(
+                "refresh_token",
+                newRefreshToken,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    Expires =
+                        DateTimeOffset.UtcNow.AddDays(7)
+                });
+
+
+            return Ok(new
+            {
+                message =
+                    "Token refreshed successfully"
+            });
         }
 
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout(RefreshRequestDTO request)
+        public async Task<IActionResult> Logout()
         {
-            await _refreshTokenService
-                .RevokeToken(
-                    request.Email,
-                    request.RefreshToken);
+            var refreshToken =
+                Request.Cookies["refresh_token"];
 
-            return Ok(
-                "Logged Out Successfully");
+            if (!string.IsNullOrEmpty(refreshToken))
+            {
+                await _refreshTokenService
+                    .RevokeToken(refreshToken);
+            }
+
+            Response.Cookies.Delete(
+                "access_token",
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None
+                });
+
+            Response.Cookies.Delete(
+                "refresh_token",
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None
+                });
+
+            return Ok(new
+            {
+                message = "Logged out successfully"
+            });
         }
     }
 }

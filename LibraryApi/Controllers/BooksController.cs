@@ -79,9 +79,9 @@ namespace LibraryApi.Controllers
 
             var bookdto = new CreateBookDTO
             {
-                Title = request.Title,
-                ISBN = request.ISBN,
-                Description = request.Description,
+                Title = request.Title.Trim(),
+                ISBN = request.ISBN.Trim(),
+                Description = request.Description.Trim(),
                 PublishYear = request.PublishYear,
                 TotalCopies = request.TotalCopies,
                 AvailableCopies = request.AvailableCopies,
@@ -121,9 +121,9 @@ namespace LibraryApi.Controllers
 
             var dto = new UpdateBookDTO
             {
-                Title = request.Title,
-                ISBN = request.ISBN,
-                Description = request.Description,
+                Title = request.Title.Trim(),
+                ISBN = request.ISBN.Trim(),
+                Description = request.Description.Trim(),
                 PublishYear = request.PublishYear,
                 TotalCopies = request.TotalCopies,
                 AvailableCopies = request.AvailableCopies,
