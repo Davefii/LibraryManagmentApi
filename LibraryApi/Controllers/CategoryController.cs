@@ -13,6 +13,14 @@ namespace LibraryApi.Controllers
         {
             _categoryService = categoryService;
         }
+        [AllowAnonymous]
+        [HttpGet("GetAllCategorysForAnyone", Name = "GetAllCategorysForAnyone")]
+        public async Task<IActionResult> GetAllCategoriesForAnyone()
+        {
+            var categories = await _categoryService.GetAllCategories();
+
+            return Ok(categories);
+        }
         // GET: api/categories
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         [HttpGet("GetAllCategorys", Name = "GetAllCategorys")]

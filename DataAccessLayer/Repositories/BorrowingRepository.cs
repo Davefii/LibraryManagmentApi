@@ -12,10 +12,12 @@ namespace DataAccessLayer.Repositories
     public class BorrowingRepository
     {
         private readonly AppDbContext _context;
+        private readonly BookRepository _bookRepository;
 
-        public BorrowingRepository(AppDbContext context)
+        public BorrowingRepository(AppDbContext context, BookRepository bookRepository)
         {
             _context = context;
+            _bookRepository = bookRepository;
         }
 
         public async Task<List<Borrowing>> GetAllAsync()
@@ -94,6 +96,14 @@ namespace DataAccessLayer.Repositories
             return await _context.Borrowings
                 .Where(x => x.MemberId == memberId)
                 .ToListAsync();
+        }
+        public async Task<List<Borrowing>> GetPopularBooksAsync()
+        {
+            return await _context.Borrowings.AsNoTracking().Include(b => b.Book).ToListAsync();
+        }
+        public async Task<List<Borrowing>> GetPopularBooksReturned()
+        {
+            return await _context.Borrowings.AsNoTracking().Include(b => b.Book).ToListAsync();
         }
     }
 }

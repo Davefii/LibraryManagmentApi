@@ -24,5 +24,32 @@ namespace LibraryApi.Controllers
 
             return Ok(dashboard);
         }
+        [Authorize(Roles = $"{Roles.Admin}")]
+        [HttpGet("PopularBooks")]
+        public async Task<IActionResult> PopularBooks()
+        {
+            var books =
+                await _dashboardService
+                    .GetPopularBooks();
+
+            return Ok(books);
+        }
+        [Authorize(Roles = $"{Roles.Admin}")]
+        [HttpGet("PopularBooksIsReturned")]
+        public async Task<IActionResult> PopularBooksIsReturned()
+        {
+            var Popularbooks =
+                await _dashboardService
+                    .GetPopularBooksReturned();
+
+            return Ok(Popularbooks);
+        }
+        [Authorize(Roles = $"{Roles.Admin}")]
+        [HttpGet("BooksByCategory")]
+        public async Task<IActionResult> BooksByCategory()
+        {
+            var BooksbyCategory = await _dashboardService.GetBooksByCategory();
+            return Ok(BooksbyCategory);
+        }
     }
 }

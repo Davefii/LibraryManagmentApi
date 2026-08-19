@@ -22,6 +22,12 @@ namespace LibraryApi.Controllers
             _authorService = authorService;
             _imageService = imageService;
         }
+        [AllowAnonymous]
+        [HttpGet("ListAuthorsForAnyone", Name = "ListAuthorsForAnyone")]
+        public async Task<IActionResult> GetAllAuthorsForAnyone()
+        {
+            return Ok(await _authorService.GetAllAuthors());
+        }
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         [HttpGet("ListAuthors", Name = "ListAuthors")]
         public async Task<IActionResult> GetAllAuthors()

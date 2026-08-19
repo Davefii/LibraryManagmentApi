@@ -388,7 +388,17 @@ namespace BusinessLayer.DTOs
         //public List<TopBookDTO> TopBooks { get; set; } = new();
         //public List<TopMemberDTO> TopMembers { get; set; } = new();
     }
-
+    public class PopularBookDTO
+    {
+        public int BookId { get; set; }
+        public string Title { get; set; } = null!;
+        public int BorrowCount { get; set; }
+    }
+    public class BooksbycategoryDTO
+    {
+        public string NameCategory { get; set; } = null!;
+        public int TotalBooks { get; set; }
+    }
     public class TopBookDTO
     {
         public string Title { get; set; } = null!;

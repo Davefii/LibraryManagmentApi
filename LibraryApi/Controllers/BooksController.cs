@@ -27,6 +27,14 @@ namespace LibraryApi.Controllers
             _author = author;
             _category = category;
         }
+        [AllowAnonymous]
+        [HttpGet("ListBooksForAnyone", Name = "GetallBooksForAnyone")]
+        public async Task<IActionResult> GetAllBooksForAnyone()
+        {
+            var books = await _bookservice.GetAllBooks();
+
+            return Ok(books);
+        }
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         [HttpGet("ListBooks", Name = "GetallBooks")]
         public async Task<IActionResult> GetAllBooks()
