@@ -51,5 +51,12 @@ namespace LibraryApi.Controllers
             var BooksbyCategory = await _dashboardService.GetBooksByCategory();
             return Ok(BooksbyCategory);
         }
+        [Authorize(Roles = $"{Roles.Admin}")]
+        [HttpGet("Recentborrowings")]
+        public async Task<IActionResult> RecentBorrowings()
+        {
+            var recentBorrowings = await _dashboardService.GetRecentborrowingsAsync();
+            return Ok(recentBorrowings);
+        }
     }
 }

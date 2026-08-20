@@ -45,6 +45,7 @@ namespace BusinessLayer.Services
             }).ToList();
         }
 
+        //public async
         public async Task<List<BorrowingResponseDTO>>GetAllBorrowings()
         {
             var borrowings =
@@ -231,5 +232,6 @@ namespace BusinessLayer.Services
 
             await _borrowingRepository.DeleteAsync(borrowing);
         }
+
     }
 }

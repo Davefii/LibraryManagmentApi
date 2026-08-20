@@ -86,7 +86,6 @@ namespace BusinessLayer.Services
             .Take(5)
             .ToListAsync();
         }
-
         public async Task<List<BooksbycategoryDTO>> GetBooksByCategory()
         {
             return await _context.Categories.AsNoTracking()
@@ -100,6 +99,19 @@ namespace BusinessLayer.Services
                 .Where(T => T.TotalBooks >= 1)
                 .OrderByDescending(C => C.TotalBooks)
                 .ToListAsync();
+        }
+
+        public async Task<List<RecentborrowingsDTO>> GetRecentborrowingsAsync()
+        {
+            var Recentborrowings = await _borrowingRepository.Recentborrowings();
+            return Recentborrowings.Select(RB => new RecentborrowingsDTO
+            {
+                BorrowingId = RB.Id,
+                MemberName = RB.Member.Name,
+                BookTitle = RB.Book.Title,
+                Status = RB.IsReturned ? "Returned" : "Active",
+                Datee = RB.BorrowDate <= DateTime.Now ? RB.BorrowDate : DateTime.Now,
+            }).ToList();
         }
     }
 }

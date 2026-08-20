@@ -375,6 +375,14 @@ namespace BusinessLayer.DTOs
 
         public int DaysLate { get; set; }
     }
+    public class RecentborrowingsDTO
+    {
+        public int BorrowingId { get; set; }
+        public string MemberName { get; set; }
+        public string BookTitle { get; set; }
+        public string Status { get; set; }
+        public DateTime Datee { get; set; }
+    }
     // DASHBOARD DTO
     public class DashboardDTO
     {

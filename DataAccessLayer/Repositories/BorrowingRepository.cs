@@ -105,5 +105,9 @@ namespace DataAccessLayer.Repositories
         {
             return await _context.Borrowings.AsNoTracking().Include(b => b.Book).ToListAsync();
         }
+        public async Task<List<Borrowing>> Recentborrowings()
+        {
+            return await _context.Borrowings.AsNoTracking().Include(b => b.Book).Include(M => M.Member).ToListAsync();
+        }
     }
 }
