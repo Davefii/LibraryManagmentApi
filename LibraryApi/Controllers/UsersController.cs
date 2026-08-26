@@ -70,6 +70,7 @@ namespace LibraryApi.Controllers
         public async Task<IActionResult> AddUser(
             [FromBody] CreateUserDTO dto)
         {
+
             await _userService.AddUser(dto);
 
             return Ok("User Created Successfully");

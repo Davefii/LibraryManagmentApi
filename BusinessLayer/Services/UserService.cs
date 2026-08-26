@@ -20,6 +20,11 @@ namespace BusinessLayer.Services
             _userRepository = userRepository;
         }
 
+        private void ValidateRole(string role)
+        {
+            if (role != Roles.Admin && role != Roles.Member)
+                throw new Exception("Invalid Role");
+        }
         public async Task<List<UserResponseDTO>> GetAllUsers()
         {
             var users = await _userRepository.GetAllAsync();
@@ -59,11 +64,7 @@ namespace BusinessLayer.Services
             if (existingUser != null)
                 throw new Exception("Email already exists");
 
-            if (dto.Role != Roles.Admin &&
-                dto.Role != Roles.Member)
-            {
-                throw new Exception("Invalid Role");
-            }
+            ValidateRole(dto.Role);
 
             var user = new User
             {
@@ -77,6 +78,7 @@ namespace BusinessLayer.Services
             await _userRepository.AddAsync(user);
         }
 
+
         public async Task UpdateUser(
             int id,
             UpdateUserDTO dto)
@@ -88,15 +90,17 @@ namespace BusinessLayer.Services
                 throw new Exception("User Not Found");
 
             user.Email = dto.Email;
-            if (dto.Password != null)
-            {
+            if (!string.IsNullOrWhiteSpace(dto.Password))
                 user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+
+            if (!string.IsNullOrWhiteSpace(dto.Role))
+            {
+                ValidateRole(dto.Role);
+                user.Role = dto.Role;
             }
-            user.IsActive = dto.IsActive;
             user.Role = dto.Role;
             await _userRepository.UpdateAsync(user);
         }
-
         public async Task DeleteUser(int id)
         {
             var user =
