@@ -88,9 +88,12 @@ namespace BusinessLayer.Services
                 throw new Exception("User Not Found");
 
             user.Email = dto.Email;
-            BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            if (dto.Password != null)
+            {
+                user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            }
             user.IsActive = dto.IsActive;
-
+            user.Role = dto.Role;
             await _userRepository.UpdateAsync(user);
         }
 

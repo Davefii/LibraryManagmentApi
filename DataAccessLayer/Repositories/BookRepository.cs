@@ -32,12 +32,12 @@ namespace DataAccessLayer.Repositories
         // Get Book By title
         public async Task<Book?> GetByTitleAsync(string title)
         {
-            return await _context.Books.AsNoTracking().Include(x => x.Authors).Include(C => C.Categories).FirstOrDefaultAsync(b => b.Title == title);
+            return await _context.Books.Include(x => x.Authors).Include(C => C.Categories).FirstOrDefaultAsync(b => b.Title == title);
         }
         // Get ISBN By title
         public async Task<Book?> GetByISBNAsync(string isbn)
         {
-            return await _context.Books.AsNoTracking().Include(x => x.Authors).Include(C => C.Categories).FirstOrDefaultAsync(b => b.Isbn == isbn);
+            return await _context.Books.Include(x => x.Authors).Include(C => C.Categories).FirstOrDefaultAsync(b => b.Isbn == isbn);
         }
         // Add Book
         public async Task AddAsync(Book book)

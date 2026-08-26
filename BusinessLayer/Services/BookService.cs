@@ -166,8 +166,8 @@ namespace BusinessLayer.Services
                 TotalCopies = bookDto.TotalCopies,
                 AvailableCopies = bookDto.AvailableCopies,
                 IsAvailable = bookDto.IsAvailable,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
                 CoverImage = bookDto.CoverImage
             };
 

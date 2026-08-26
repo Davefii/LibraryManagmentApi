@@ -57,9 +57,6 @@ namespace DataAccessLayer.Repositories
 
             await _context.SaveChangesAsync();
         }
-        public async Task ChangeRole()
-        {
 
-        }
     }
 }

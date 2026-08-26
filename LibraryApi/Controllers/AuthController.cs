@@ -267,7 +267,7 @@ namespace LibraryApi.Controllers
                     Secure = true,
                     SameSite = SameSiteMode.None,
                     Expires =
-                        DateTimeOffset.UtcNow.AddDays(7)
+                        DateTimeOffset.UtcNow.AddDays(1)
                 });
 
 

@@ -92,13 +92,10 @@ namespace BusinessLayer.DTOs
     }
     public class UpdateUserDTO
     {
-        [Required]
         [EmailAddress]
         public string Email { get; set; } = null!;
-        [Required]
         public string Password { get; set; } = null!;
-
-        public DateTime CreatedAt { get; set; }
+        public string Role { get; set; }
         public bool IsActive { get; set; }
     }
     //UserProfile
