@@ -248,15 +248,15 @@ namespace BusinessLayer.DTOs
     }
     public class CreateBookDTO
     {
-        public int Id { get;}
-        public string Title { get; set; }
-        public string ISBN { get; set; }
-        public string Description { get; set; }
-        public int PublishYear { get; set; }
-        public int TotalCopies { get; set; }
-        public int AvailableCopies { get; set; }
-        public bool IsAvailable { get; set; }
-        public string CoverImage { get; set; }
+        [Required]  public int Id { get;}
+        [Required]  public string Title { get; set; }
+        [Required]  public string ISBN { get; set; }
+        [Required]  public string Description { get; set; }
+        [Required]  public int PublishYear { get; set; }
+        [Required]  public int TotalCopies { get; set; }
+        [Required]  public int AvailableCopies { get; set; }
+        [Required]  public bool IsAvailable { get; set; }
+        [Required]   public string CoverImage { get; set; }
         [Required] public int AuthorID { get; set; }
         [Required] public int CategoryID { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -265,14 +265,14 @@ namespace BusinessLayer.DTOs
 
     public class UpdateBookDTO
     {
-        public string Title { get; set; }
-        public string ISBN { get; set; }
-        public string Description { get; set; }
-        public int PublishYear { get; set; }
-        public int TotalCopies { get; set; }
-        public int AvailableCopies { get; set; }
-        public bool IsAvailable { get; set; }
-        public string? CoverImage { get; set; }
+        [Required] public string Title { get; set; }
+        [Required] public string ISBN { get; set; }
+        [Required] public string Description { get; set; }
+        [Required] public int PublishYear { get; set; }
+        [Required] public int TotalCopies { get; set; }
+        [Required] public int AvailableCopies { get; set; }
+        [Required] public bool IsAvailable { get; set; }
+        [Required] public string? CoverImage { get; set; }
         [Required] public int AuthorID { get; set; }
         [Required] public int CategoryID { get; set; }
         public DateTime? UpdatedAt { get; set; }

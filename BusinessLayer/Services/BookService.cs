@@ -54,7 +54,7 @@ namespace BusinessLayer.Services
         }
         public async Task<BookResponseDTO?> GetBookById(int id)
         {
-            //return await _bookRepository.GetByIdAsync(id);
+           
             var book = await _bookRepository.GetByIdAsync(id);
 
             if (book == null)
@@ -72,6 +72,7 @@ namespace BusinessLayer.Services
                 IsAvailable = book.IsAvailable,
                 CreatedAt = book.CreatedAt,
                 UpdatedAt = book.UpdatedAt,
+                CoverImage = book.CoverImage,
                 Authors = book.Authors.Select(a => new AuthorSummaryDTO
                 {
                     Id = a.Id,
@@ -103,6 +104,7 @@ namespace BusinessLayer.Services
                 IsAvailable = book.IsAvailable,
                 CreatedAt = book.CreatedAt,
                 UpdatedAt = book.UpdatedAt,
+                CoverImage = book.CoverImage,
                 Authors = book.Authors.Select(a => new AuthorSummaryDTO
                 {
                     Id = a.Id,
@@ -134,6 +136,7 @@ namespace BusinessLayer.Services
                 IsAvailable = book.IsAvailable,
                 CreatedAt = book.CreatedAt,
                 UpdatedAt = book.UpdatedAt,
+                CoverImage = book.CoverImage,
                 Authors = book.Authors.Select(a => new AuthorSummaryDTO
                 {
                     Id = a.Id,

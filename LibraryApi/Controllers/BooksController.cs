@@ -106,7 +106,7 @@ namespace LibraryApi.Controllers
         }
         [Authorize(Roles = $"{Roles.Admin}")]
         [HttpPut("UpdateBookBy{Id}", Name = "UpdateBookByid")]
-        public async Task<IActionResult> UpdateBook([FromForm] int Id, UpdateBookRequest request)
+        public async Task<IActionResult> UpdateBook([FromRoute] int Id, [FromForm] UpdateBookRequest request)
         {
             var currentBook = await _bookservice.GetBookById(Id);
 
@@ -140,7 +140,7 @@ namespace LibraryApi.Controllers
                 AuthorID = request.AuthorID,
                 CategoryID = request.CategoryID,
                 
-                UpdatedAt = request.UpdatedAt
+                UpdatedAt = DateTime.UtcNow
             };
             await _bookservice.UpdateBook(Id, dto);
 
