@@ -40,11 +40,11 @@ namespace DataAccessLayer.Repositories
             return await _context.Books.Include(x => x.Authors).Include(C => C.Categories).FirstOrDefaultAsync(b => b.Isbn == isbn);
         }
         // Add Book
-        public async Task AddAsync(Book book)
+        public async Task<int> AddAsync(Book book)
         {
             await _context.Books.AddAsync(book);
-
             await _context.SaveChangesAsync();
+            return book.Id;
         }
 
         // Update Book

@@ -8,6 +8,7 @@ using LibraryApi.Requests;
 using LibraryApi.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace LibraryApi.Controllers
 {
@@ -100,9 +101,9 @@ namespace LibraryApi.Controllers
                 CreatedAt = request.CreatedAt,
                 UpdatedAt = request.UpdatedAt
             };
-            await _bookservice.AddBook(bookdto);
+            int bookid = await _bookservice.AddBook(bookdto);
 
-            return Ok();
+            return CreatedAtRoute("GetBookByID", new { id = bookid }, new { id = bookid });
         }
         [Authorize(Roles = $"{Roles.Admin}")]
         [HttpPut("UpdateBookBy{Id}", Name = "UpdateBookByid")]

@@ -150,7 +150,7 @@ namespace BusinessLayer.Services
                 }).ToList()
             };
         }
-        public async Task AddBook(CreateBookDTO bookDto)
+        public async Task<int> AddBook(CreateBookDTO bookDto)
         {
             var author = await _authorRepository.GetByIdAsync(bookDto.AuthorID);
             var category = await _categoryRepository.GetByIdAsync(bookDto.CategoryID);
@@ -177,7 +177,7 @@ namespace BusinessLayer.Services
             book.Authors.Add(author);
             book.Categories.Add(category);
 
-            await _bookRepository.AddAsync(book);
+           return await _bookRepository.AddAsync(book);
         }
         public async Task UpdateBook(int id, UpdateBookDTO dto)
         {

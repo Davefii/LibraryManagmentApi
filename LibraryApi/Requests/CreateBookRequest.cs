@@ -14,7 +14,7 @@ namespace LibraryApi.Requests
         [Required]  public IFormFile? CoverImage { get; set; }
         [Required] public int AuthorID { get; set; }
         [Required] public int CategoryID { get; set; }
-        [Required] public DateTime CreatedAt { get; set; }
-        [Required] public DateTime? UpdatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 }
