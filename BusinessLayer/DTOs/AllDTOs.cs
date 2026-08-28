@@ -359,6 +359,9 @@ namespace BusinessLayer.DTOs
         public DateTime? ReturnDate { get; set; }
         public bool IsReturned { get; set; }
         public DateTime CreatedAt { get; set; }
+        public BookForReadOnlyDTOSmall? Book { get; set; }
+        public MemberForBorrowingsDTO? Member { get; set; }
+        public UserResponseDTO? User { get; set; }
     }
     public class OverdueBorrowingDTO
     {

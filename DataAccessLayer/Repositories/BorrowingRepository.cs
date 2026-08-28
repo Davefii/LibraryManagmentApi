@@ -24,12 +24,18 @@ namespace DataAccessLayer.Repositories
         {
             return await _context.Borrowings
                 .AsNoTracking()
+                .Include(book => book.Book)
+                .Include(member => member.Member)
+                .ThenInclude(user => user.User)
                 .ToListAsync();
         }
 
         public async Task<Borrowing?> GetByIdAsync(int id)
         {
-            return await _context.Borrowings.Include(x => x.Member)
+            return await _context.Borrowings
+                .Include(book => book.Book)
+                .Include(member => member.Member)
+                .ThenInclude(user => user.User)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 

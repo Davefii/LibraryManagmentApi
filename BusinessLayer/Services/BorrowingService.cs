@@ -45,23 +45,61 @@ namespace BusinessLayer.Services
             }).ToList();
         }
 
-        //public async
-        public async Task<List<BorrowingResponseDTO>>GetAllBorrowings()
+        public async Task<List<BorrowingResponseDTO>> GetAllBorrowings()
         {
             var borrowings =
                 await _borrowingRepository.GetAllAsync();
 
-            return borrowings.Select(b => new BorrowingResponseDTO
-            {
-                Id = b.Id,
-                MemberId = b.MemberId,
-                BookId = b.BookId,
-                BorrowDate = b.BorrowDate,
-                DueDate = b.DueDate,
-                ReturnDate = b.ReturnDate,
-                IsReturned = b.IsReturned,
-                CreatedAt = b.CreatedAt
-            }).ToList();
+            return borrowings.Select(b =>
+                new BorrowingResponseDTO
+                {
+                    Id = b.Id,
+
+                    MemberId = b.MemberId,
+
+                    UserId = b.Member.UserId,
+
+                    BookId = b.BookId,
+
+                    BorrowDate = b.BorrowDate,
+
+                    DueDate = b.DueDate,
+
+                    ReturnDate = b.ReturnDate,
+
+                    IsReturned = b.IsReturned,
+
+                    CreatedAt = b.CreatedAt,
+
+                    Book = new BookForReadOnlyDTOSmall
+                    {
+                        Id = b.Book.Id,
+                        Title = b.Book.Title,
+                        ISBN = b.Book.Isbn,
+                        Description = b.Book.Description,
+                        PublishYear = b.Book.PublishYear,
+                        CoverImage = b.Book.CoverImage,
+                    },
+
+                    Member = new MemberForBorrowingsDTO
+                    {
+                        Id = b.Member.Id,
+                        UserId = b.Member.UserId,
+                        Name = b.Member.Name,
+                        MembershipExpiryDate = b.Member.MembershipExpiryDate,
+                        IsActive = b.Member.IsActive,
+                    },
+
+                    User = new UserResponseDTO
+                    {
+                        Id = b.Member.User.Id,
+                        Email = b.Member.User.Email,
+                        Role = b.Member.User.Role,
+                        CreatedAt = b.Member.User.CreatedAt,
+                        IsActive = b.Member.User.IsActive
+                    }
+
+                }).ToList();
         }
 
         public async Task<BorrowingResponseDTO?>GetBorrowingById(int id)
@@ -75,18 +113,54 @@ namespace BusinessLayer.Services
             return new BorrowingResponseDTO
             {
                 Id = borrowing.Id,
+
                 MemberId = borrowing.MemberId,
+
                 UserId = borrowing.Member.UserId,
+
                 BookId = borrowing.BookId,
+
                 BorrowDate = borrowing.BorrowDate,
+
                 DueDate = borrowing.DueDate,
+
                 ReturnDate = borrowing.ReturnDate,
+
                 IsReturned = borrowing.IsReturned,
-                CreatedAt = borrowing.CreatedAt
+
+                CreatedAt = borrowing.CreatedAt,
+
+                Book = new BookForReadOnlyDTOSmall
+                {
+                    Id = borrowing.Book.Id,
+                    Title = borrowing.Book.Title,
+                    ISBN = borrowing.Book.Isbn,
+                    Description = borrowing.Book.Description,
+                    PublishYear = borrowing.Book.PublishYear,
+                    CoverImage = borrowing.Book.CoverImage,
+                },
+
+                Member = new MemberForBorrowingsDTO
+                {
+                    Id = borrowing.Member.Id,
+                    UserId = borrowing.Member.UserId,
+                    Name = borrowing.Member.Name,
+                    MembershipExpiryDate = borrowing.Member.MembershipExpiryDate,
+                    IsActive = borrowing.Member.IsActive,
+                },
+
+                User = new UserResponseDTO
+                {
+                    Id = borrowing.Member.User.Id,
+                    Email = borrowing.Member.User.Email,
+                    Role = borrowing.Member.User.Role,
+                    CreatedAt = borrowing.Member.User.CreatedAt,
+                    IsActive = borrowing.Member.IsActive
+                }
             };
         }
 
-        public async Task<List<BorrowingResponseDTO>>GetMemberBorrowings(int memberId)
+        public async Task<List<BorrowingResponseDTO>> GetMemberBorrowings(int memberId)
         {
             var borrowings =
                 await _borrowingRepository
@@ -97,12 +171,38 @@ namespace BusinessLayer.Services
                 {
                     Id = b.Id,
                     MemberId = b.MemberId,
+                    UserId = b.Member.UserId,
                     BookId = b.BookId,
                     BorrowDate = b.BorrowDate,
                     DueDate = b.DueDate,
                     ReturnDate = b.ReturnDate,
                     IsReturned = b.IsReturned,
-                    CreatedAt = b.CreatedAt
+                    CreatedAt = b.CreatedAt,
+                    Book = new BookForReadOnlyDTOSmall
+                    {
+                        Id = b.Book.Id,
+                        Title = b.Book.Title,
+                        ISBN = b.Book.Isbn,
+                        Description = b.Book.Description,
+                        PublishYear = b.Book.PublishYear,
+                        CoverImage = b.Book.CoverImage,
+                    },
+                    Member = new MemberForBorrowingsDTO
+                    {
+                        Id = b.Member.Id,
+                        UserId = b.Member.UserId,
+                        Name = b.Member.Name,
+                        MembershipExpiryDate = b.Member.MembershipExpiryDate,
+                        IsActive = b.Member.IsActive,
+                    },
+                    User = new UserResponseDTO
+                    {
+                        Id = b.Member.User.Id,
+                        Email = b.Member.User.Email,
+                        Role = b.Member.User.Role,
+                        CreatedAt = b.Member.User.CreatedAt,
+                        IsActive = b.Member.User.IsActive
+                    }
                 }).ToList();
         }
 
