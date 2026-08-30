@@ -256,7 +256,6 @@ namespace BusinessLayer.Services
             {
                 book.IsAvailable = false;
             }
-
             await _borrowingRepository.AddAsync(borrowing);
             await _auditService.LogAsync(
             memeber.UserId,
@@ -274,7 +273,8 @@ namespace BusinessLayer.Services
             if (borrowing == null)
                 throw new Exception("Borrowing Not Found");
 
-            borrowing.DueDate = dto.DueDate;
+            borrowing.MemberId = dto.MemberId;
+            borrowing.BookId = dto.BookId;
 
             await _borrowingRepository.UpdateAsync(borrowing);
         }

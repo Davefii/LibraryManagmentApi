@@ -344,9 +344,8 @@ namespace BusinessLayer.DTOs
     }
     public class UpdateBorrowingDTO
     {
-        public DateTime? ReturnDate { get; set; }
-        public DateTime DueDate { get; set; }
-        public bool IsReturned { get; set; }
+        public int MemberId { get; set; }
+        public int BookId { get; set; }
     }
     public class BorrowingResponseDTO
     {

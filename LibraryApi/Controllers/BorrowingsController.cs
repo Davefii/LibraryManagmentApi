@@ -7,7 +7,8 @@ using System.Security.Claims;
 namespace LibraryApi.Controllers
 {
     [Authorize]
-
+    [ApiController]
+    [Route("api/[Controller]")]
     public class BorrowingsController : Controller
     {
         private readonly BorrowingService _borrowingService;
@@ -25,7 +26,7 @@ namespace LibraryApi.Controllers
                 await _borrowingService.GetAllBorrowings());
         }
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
-        [HttpGet("GetBorrowingBy{id}", Name = "GetBorrowingById")]
+        [HttpGet("GetBorrowingBy/{id}", Name = "GetBorrowingById")]
         public async Task<IActionResult> GetBorrowingById(
             int id)
         {
@@ -91,12 +92,12 @@ namespace LibraryApi.Controllers
         public async Task<IActionResult> AddBorrowing(
             CreateBorrowingDTO dto)
         {
-            await _borrowingService.AddBorrowing(dto);
+           await _borrowingService.AddBorrowing(dto);
 
-            return Ok("Borrowing Created");
+            return Ok("Borrow Book Successfulley");
         }
         [Authorize(Roles = $"{Roles.Admin}")]
-        [HttpPut("UpdateBorrwing{id}", Name = "UpdateBorrwing")]
+        [HttpPut("UpdateBorrowing/{id}", Name = "UpdateBorrowing")]
         public async Task<IActionResult> UpdateBorrowing(
             int id,
             UpdateBorrowingDTO dto)
