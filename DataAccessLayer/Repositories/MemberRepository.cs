@@ -25,7 +25,7 @@ namespace DataAccessLayer.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Member?> GetByIdAsync(int id)
+        public async Task<Member?> GetMemberByIdAsync(int id)
         {
             return await _context.Members.Include(m => m.User)
                 .FirstOrDefaultAsync(x => x.Id == id);

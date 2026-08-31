@@ -307,10 +307,10 @@ namespace BusinessLayer.DTOs
 
     public class UpdateMemberDTO
     {
-        [MaxLength(150)] public string? Name { get; set; }
-        [MaxLength(20)]  public string? Phone { get; set; }
-        [MaxLength(200)] public string? Address { get; set; }
-        public DateTime? MembershipExpiryDate { get; set; }
+        [Required][MaxLength(150)] public string? Name { get; set; }
+        [Required][MaxLength(20)]  public string? Phone { get; set; }
+        [Required][MaxLength(200)] public string? Address { get; set; }
+        //public DateTime? MembershipExpiryDate { get; set; }
     }
 
     public class MemberResponseDTO

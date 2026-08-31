@@ -41,7 +41,7 @@ namespace BusinessLayer.Services
 
         public async Task<MemberResponseDTO?> GetMemberById(int id)
         {
-            var member = await _memberRepository.GetByIdAsync(id);
+            var member = await _memberRepository.GetMemberByIdAsync(id);
 
             if (member == null)
                 return null;
@@ -59,7 +59,7 @@ namespace BusinessLayer.Services
         }
         public async Task<MemberForBorrowingsDTO?> IsMemberExist(int id)
         {
-            var member = await _memberRepository.GetByIdAsync(id);
+            var member = await _memberRepository.GetMemberByIdAsync(id);
 
             if (member == null)
                 return null;
@@ -103,7 +103,7 @@ namespace BusinessLayer.Services
             UpdateMemberDTO dto)
         {
             var member =
-                await _memberRepository.GetByIdAsync(id);
+                await _memberRepository.GetMemberByIdAsync(id);
 
             if (member == null)
                 throw new Exception("Member Not Found");
@@ -117,17 +117,13 @@ namespace BusinessLayer.Services
             if (!string.IsNullOrWhiteSpace(dto.Address))
                 member.Address = dto.Address;
 
-            if (dto.MembershipExpiryDate.HasValue)
-                member.MembershipExpiryDate =
-                    dto.MembershipExpiryDate.Value;
-
             await _memberRepository.UpdateAsync(member);
         }
 
         public async Task DeleteMember(int id)
         {
             var member =
-                await _memberRepository.GetByIdAsync(id);
+                await _memberRepository.GetMemberByIdAsync(id);
 
             if (member == null)
                 throw new Exception("Member Not Found");
