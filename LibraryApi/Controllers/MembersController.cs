@@ -65,7 +65,7 @@ namespace LibraryApi.Controllers
             return Ok();
         }
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
-        [HttpPut("UpdateMyInfomationMember", Name = "UpdateMyInformationMemeber")]
+        [HttpPut("UpdateMyInfomationMember", Name = "UpdateMyInformationMember")]
         public async Task<IActionResult> UpdateMemberForSelf(UpdateMemberDTO dto)
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
@@ -88,7 +88,7 @@ namespace LibraryApi.Controllers
 
             return NoContent();
         }
-        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
+        [Authorize(Roles = $"{Roles.Admin}")]
         [HttpPut("UpdateMember{ID}", Name = "UpdateMemberByID")]
         public async Task<IActionResult> UpdateMember(int ID,UpdateMemberDTO dto)
         {
@@ -102,7 +102,7 @@ namespace LibraryApi.Controllers
             return NoContent();
         }
         [Authorize(Roles = $"{Roles.Admin}")]
-        [HttpDelete("DeleteMemeberBy{id}", Name = "DeleteMemeberByID")]
+        [HttpDelete("DeleteMemberBy{id}", Name = "DeleteMemberByID")]
         public async Task<IActionResult> DeleteMember(int id)
         {
             await _memberService.DeleteMember(id);

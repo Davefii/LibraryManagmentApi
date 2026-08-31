@@ -22,18 +22,20 @@ namespace DataAccessLayer.Repositories
         {
             return await _context.Members
                 .AsNoTracking()
+                .Include(m => m.User)
+                .Include(m => m.Borrowings)
                 .ToListAsync();
         }
 
         public async Task<Member?> GetMemberByIdAsync(int id)
         {
-            return await _context.Members.Include(m => m.User)
+            return await _context.Members.Include(m => m.User).Include(m => m.Borrowings)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Member?> GetByUserIdAsync(int userId)
         {
-            return await _context.Members
+            return await _context.Members.Include(m => m.Borrowings)
                 .FirstOrDefaultAsync(x => x.UserId == userId);
         }
 
@@ -58,5 +60,6 @@ namespace DataAccessLayer.Repositories
         {
             return await _context.Members.CountAsync();
         }
+
     }
 }

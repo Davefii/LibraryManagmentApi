@@ -299,8 +299,8 @@ namespace BusinessLayer.DTOs
     public class CreateMemberDTO
     {
         [Required][MaxLength(150)] public string Name { get; set; } = null!;
-        [MaxLength(20)]  public string? Phone { get; set; }
-        [MaxLength(200)] public string? Address { get; set; }
+        [Required][MaxLength(20)]  public string? Phone { get; set; }
+        [Required][MaxLength(200)] public string? Address { get; set; }
         [Required] public DateTime MembershipExpiryDate { get; set; }
         //[Required] public int UserID { get; set; }
     }
@@ -324,7 +324,7 @@ namespace BusinessLayer.DTOs
         public bool IsActive { get; set; }
         public int TotalBorrowings { get; set; }
         public int ActiveBorrowings { get; set; }
-        //public List<User> User { get;} = new();
+        public UserForMemberResponseDTO? User { get; set; }
     }
     public class MemberForBorrowingsDTO
     {
@@ -333,6 +333,11 @@ namespace BusinessLayer.DTOs
         public string Name { get; set; } = null!;
         public DateTime MembershipExpiryDate { get; set; }
         public bool IsActive { get; set; }
+    }
+    public class UserForMemberResponseDTO
+    {
+        public int Id { get; set; }
+        public string Email { get; set; } = null!;
     }
     // BORROWING DTOs
     public class CreateBorrowingDTO

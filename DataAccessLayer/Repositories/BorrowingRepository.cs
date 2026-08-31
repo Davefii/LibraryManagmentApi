@@ -96,7 +96,13 @@ namespace DataAccessLayer.Repositories
                     !x.IsReturned &&
                     x.DueDate < DateTime.UtcNow);
         }
-
+        public async Task<List<Borrowing>> GetBorrowingsByMemberIdsAsync(List<int> memberIds)
+        {
+            return await _context.Borrowings
+                .AsNoTracking()
+                .Where(b => memberIds.Contains(b.MemberId))
+                .ToListAsync();
+        }
         public async Task<List<Borrowing>>GetBorrowingsByMemberIdAsync(int memberId)
         {
             return await _context.Borrowings
@@ -114,6 +120,14 @@ namespace DataAccessLayer.Repositories
         public async Task<List<Borrowing>> Recentborrowings()
         {
             return await _context.Borrowings.AsNoTracking().Include(b => b.Book).Include(M => M.Member).ToListAsync();
+        }
+        public async Task<int> TotalBorrowingsForSelfMemberAsync(int MemberID)
+        {
+            return await _context.Borrowings.Where(BM => BM.MemberId == MemberID).CountAsync();
+        }
+        public async Task<int> TotalActiveBorrowingsForSelfMemberAsync(int MemberID)
+        {
+            return await _context.Borrowings.Where(BM => BM.MemberId == MemberID && BM.IsReturned == false).CountAsync();
         }
     }
 }

@@ -50,14 +50,14 @@ namespace BusinessLayer.Services
 
                 ActiveBorrowings = await _borrowingRepository.TotalBorrowings(),
 
-                OverdueBorrowings = await _borrowingRepository .GetOverdueBorrowingsCountAsync(),
+                OverdueBorrowings = await _borrowingRepository.GetOverdueBorrowingsCountAsync(),
 
                 BooksUnavailable = await _bookRepository.GetUnavailableBooksCountAsync()
             };
 
 
         }
-        public async Task<List<PopularBookDTO>>GetPopularBooks()
+        public async Task<List<PopularBookDTO>> GetPopularBooks()
         {
             return await _context.Borrowings.AsNoTracking()
             .GroupBy(b => new { b.BookId, b.Book.Title })
@@ -112,6 +112,14 @@ namespace BusinessLayer.Services
                 Status = RB.IsReturned ? "Returned" : "Active",
                 Datee = RB.BorrowDate <= DateTime.Now ? RB.BorrowDate : DateTime.Now,
             }).ToList();
+        }
+        public async Task<int> TotalBorrowingsForSelfMemberAsync(int MemberID)
+        {
+            return await _borrowingRepository.TotalBorrowingsForSelfMemberAsync(MemberID);
+        }
+        public async Task<int> TotalActiveBorrowingsForSelfMemberAsync(int MemberID)
+        {
+            return await _borrowingRepository.TotalActiveBorrowingsForSelfMemberAsync(MemberID);
         }
     }
 }

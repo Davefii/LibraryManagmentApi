@@ -14,19 +14,25 @@ namespace BusinessLayer.Services
     {
         private readonly MemberRepository _memberRepository;
         private readonly UserRepository _userRepository;
-
+        private readonly BorrowingRepository _borrowingRepository;
+        private readonly DashbaordService _dashbaordService;
         public MemberService(
             MemberRepository memberRepository,
-            UserRepository userRepository)
+            UserRepository userRepository,
+            BorrowingRepository borrowingRepository,
+            DashbaordService dashbaordService)
         {
             _memberRepository = memberRepository;
             _userRepository = userRepository;
+            _borrowingRepository = borrowingRepository;
+            _dashbaordService = dashbaordService;
         }
 
         public async Task<List<MemberResponseDTO>> GetAllMembers()
         {
             var members = await _memberRepository.GetAllAsync();
 
+            //var results = members
             return members.Select(member => new MemberResponseDTO
             {
                 Id = member.Id,
@@ -35,7 +41,14 @@ namespace BusinessLayer.Services
                 Phone = member.Phone,
                 Address = member.Address,
                 MembershipExpiryDate = member.MembershipExpiryDate,
-                IsActive = member.IsActive
+                IsActive = member.IsActive,
+                User = new UserForMemberResponseDTO
+                {
+                    Id = member.User.Id,
+                    Email = member.User.Email
+                },
+                ActiveBorrowings = member.Borrowings.Where(B => !B.IsReturned).Count(),
+                TotalBorrowings = member.Borrowings.Count(),
             }).ToList();
         }
 
@@ -54,7 +67,14 @@ namespace BusinessLayer.Services
                 Phone = member.Phone,
                 Address = member.Address,
                 MembershipExpiryDate = member.MembershipExpiryDate,
-                IsActive = member.IsActive
+                IsActive = member.IsActive,
+                User = new UserForMemberResponseDTO
+                {
+                    Id = member.User.Id,
+                    Email = member.User.Email
+                },
+                ActiveBorrowings = member.Borrowings.Where(B => !B.IsReturned).Count(),
+                TotalBorrowings = member.Borrowings.Count(),
             };
         }
         public async Task<MemberForBorrowingsDTO?> IsMemberExist(int id)
