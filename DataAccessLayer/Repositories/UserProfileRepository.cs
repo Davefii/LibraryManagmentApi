@@ -21,19 +21,19 @@ namespace DataAccessLayer.Repositories
         public async Task<List<UserProfile>> GetAllAsync()
         {
             return await _context.UserProfiles
-                .AsNoTracking()
+                .AsNoTracking().Include(Users => Users.User)
                 .ToListAsync();
         }
 
         public async Task<UserProfile?> GetByIdAsync(int id)
         {
-            return await _context.UserProfiles
+            return await _context.UserProfiles.Include(Users => Users.User)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<UserProfile?> GetByUserIdAsync(int userId)
         {
-            return await _context.UserProfiles
+            return await _context.UserProfiles.Include(Users => Users.User)
                 .FirstOrDefaultAsync(x => x.UserId == userId);
         }
 

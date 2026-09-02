@@ -76,7 +76,6 @@ namespace BusinessLayer.DTOs
         [EmailAddress]
         public string Email { get; set; } = null!;
         [Required]
-        [MinLength(8)]
         public string Password { get; set; } = null!;
         public string Role { get; set; } = Roles.Member;
         public DateTime CreatedAt { get; set; }
@@ -85,8 +84,8 @@ namespace BusinessLayer.DTOs
     public class UserResponseDTO
     {
         public int Id { get; set; }
-        public string Email { get; set; } = null!;
-        public string Role { get; set; } = null!;
+        [Required] public string Email { get; set; } = null!;
+        [Required] public string Role { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public bool IsActive { get; set; }
     }
@@ -122,6 +121,7 @@ namespace BusinessLayer.DTOs
         public string LastName { get; set; } = null!;
         public string? PhoneNumber { get; set; }
         public string? Address { get; set; }
+        public UserResponseDTO User { get; set; }
     }
     // AUTHOR DTOs
     public class CreateAuthorDTO

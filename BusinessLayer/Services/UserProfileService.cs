@@ -36,7 +36,15 @@ namespace BusinessLayer.Services
                     FirstName = profile.FirstName,
                     LastName = profile.LastName,
                     PhoneNumber = profile.PhoneNumber,
-                    Address = profile.Address
+                    Address = profile.Address,
+                    User = new UserResponseDTO
+                    {
+                        Id = profile.User.Id,
+                        Email = profile.User.Email,
+                        Role = profile.User.Role,
+                        IsActive = profile.User.IsActive,
+                        CreatedAt = profile.User.CreatedAt,
+                    }
                 }).ToList();
         }
 
@@ -56,7 +64,15 @@ namespace BusinessLayer.Services
                 FirstName = profile.FirstName,
                 LastName = profile.LastName,
                 PhoneNumber = profile.PhoneNumber,
-                Address = profile.Address
+                Address = profile.Address,
+                User = new UserResponseDTO
+                {
+                    Id = profile.User.Id,
+                    Email = profile.User.Email,
+                    Role = profile.User.Role,
+                    IsActive = profile.User.IsActive,
+                    CreatedAt = profile.User.CreatedAt,
+                }
             };
         }
 
@@ -76,7 +92,15 @@ namespace BusinessLayer.Services
                 FirstName = profile.FirstName,
                 LastName = profile.LastName,
                 PhoneNumber = profile.PhoneNumber,
-                Address = profile.Address
+                Address = profile.Address,
+                User = new UserResponseDTO
+                {
+                    Id = profile.User.Id,
+                    Email = profile.User.Email,
+                    Role = profile.User.Role,
+                    IsActive = profile.User.IsActive,
+                    CreatedAt = profile.User.CreatedAt,
+                }
             };
         }
 
