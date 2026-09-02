@@ -1,9 +1,12 @@
 ﻿using DataAccessLayer.Entities;
+using DataAccessLayer.Repositories;
+using BusinessLayer.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataAccessLayer.Repositories;
 
 namespace BusinessLayer.Services
 {
@@ -15,6 +18,21 @@ namespace BusinessLayer.Services
             AuditRepository auditRepository)
         {
             _auditRepository = auditRepository;
+        }
+
+        public async Task<List<AuditLogResponseDTO>> LoadAuditLogsAsync()
+        {
+            var auditLogs = await _auditRepository.GetAllAsync();
+
+            return auditLogs.Select(log => new AuditLogResponseDTO
+            {
+                Id = log.Id,
+                UserId = log.UserId,
+                Action = log.Action,
+                EntityName = log.EntityName,
+                Details = log.Details,
+                CreatedAt = log.CreatedAt
+            }).ToList();
         }
 
         public async Task LogAsync(

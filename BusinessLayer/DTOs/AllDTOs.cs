@@ -432,4 +432,14 @@ namespace BusinessLayer.DTOs
         public int PageSize { get; set; }
         public int TotalPages => (int)Math.Ceiling((double)TotalCount / PageSize);
     }
+    // AUDIT DTOs
+    public class AuditLogResponseDTO
+    {
+        public int Id { get; set; }
+        public int? UserId { get; set; }
+        public string Action { get; set; } = null!;
+        public string EntityName { get; set; } = null!;
+        public string Details { get; set; } = null!;
+        public DateTime CreatedAt { get; set; }
+    }
 }
