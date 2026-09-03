@@ -333,5 +333,44 @@ namespace BusinessLayer.Services
             await _borrowingRepository.DeleteAsync(borrowing);
         }
 
+        public async Task<List<RecentborrowingsDTO>> RecentborrowingsForSelfMemberAsync(int memberId)
+        {
+            var borrowings = await _borrowingRepository.RecentborrowingsForSelfMember(memberId);
+
+            return borrowings.Select(b => new RecentborrowingsDTO
+            {
+                BorrowingId = b.Id,
+                MemberName = b.Member.Name,
+                BookTitle = b.Book.Title,
+                Status = b.IsReturned ? "Returned" : "Active",
+                Datee = b.BorrowDate <= DateTime.Now ? b.BorrowDate : DateTime.Now,
+            }).ToList();
+        }
+
+        public async Task<int> TotalBorrowingsForSelfMemberAsync(int memberId)
+        {
+            return await _borrowingRepository.TotalBorrowingsForSelfMemberAsync(memberId);
+        }
+
+        public async Task<int> TotalActiveBorrowingsForSelfMemberAsync(int memberId)
+        {
+            return await _borrowingRepository.TotalActiveBorrowingsForSelfMemberAsync(memberId);
+        }
+
+        public async Task<int> TotalReturnBorrowingsForSelfMemberAsync(int memberId)
+        {
+            return await _borrowingRepository.TotalReturnBorrowingsForSelfMemberAsync(memberId);
+        }
+
+        public async Task<int> TotalOverdueBorrowingsForSelfMemberAsync(int memberId)
+        {
+            return await _borrowingRepository.TotalOverduebooksBorrowingsForSelfMemberAsync(memberId);
+        }
+
+        public async Task<int?> GetMemberIdByUserIdAsync(int userId)
+        {
+            var member = await _memberService.GetByUserId(userId);
+            return member?.Id;
+        }
     }
 }

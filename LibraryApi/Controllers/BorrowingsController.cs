@@ -1,4 +1,4 @@
-﻿using BusinessLayer.DTOs;
+using BusinessLayer.DTOs;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -54,45 +54,12 @@ namespace LibraryApi.Controllers
             return Ok(borrowing);
         }
 
-    //    [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
-    //    [HttpGet("{memberId}/history")]
-    //    public async Task<IActionResult>
-    //GetBorrowingHistory(int memberId)
-    //    {
-    //        var member =
-    //            await _memberService
-    //                .GetMemberById(memberId);
-
-    //        if (member == null)
-    //            return NotFound();
-
-    //        var currentUserId =
-    //            int.Parse(
-    //                User.FindFirst(ClaimTypes.NameIdentifier)!
-    //                    .Value);
-
-    //        bool isAdmin =
-    //            User.IsInRole(Roles.Admin);
-
-    //        if (!isAdmin &&
-    //            member.UserId != currentUserId)
-    //        {
-    //            return Forbid();
-    //        }
-
-    //        var history =
-    //            await _borrowingService
-    //                .GetMemberBorrowings(memberId);
-
-    //        return Ok(history);
-    //    }
-
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         [HttpPost("AddBorrowing", Name = "AddBorrowing")]
         public async Task<IActionResult> AddBorrowing(
             CreateBorrowingDTO dto)
         {
-           await _borrowingService.AddBorrowing(dto);
+            await _borrowingService.AddBorrowing(dto);
 
             return Ok("Borrow Book Successfulley");
         }
@@ -129,7 +96,7 @@ namespace LibraryApi.Controllers
             return NoContent();
         }
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
-        [HttpPost("returnBookBy{id}", Name = "ReturnBook")]
+        [HttpPost("returnBookBy/{id}", Name = "ReturnBook")]
         public async Task<IActionResult> ReturnBook(int id)
         {
             var borrowing =
@@ -158,7 +125,7 @@ namespace LibraryApi.Controllers
             return NoContent();
         }
         [Authorize(Roles = $"{Roles.Admin}")]
-        [HttpDelete("DeleteBorrowings{id}", Name = "DeleteBorrowing")]
+        [HttpDelete("DeleteBorrowings/{id}", Name = "DeleteBorrowing")]
         public async Task<IActionResult> DeleteBorrowing(
             int id)
         {
@@ -174,6 +141,186 @@ namespace LibraryApi.Controllers
                 await _borrowingService.GetOverdueBorrowings();
 
             return Ok(borrowings);
+        }
+
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
+        [HttpGet("RecentBorrowingsForMember", Name = "RecentBorrowingsForMemberCurrent")]
+        [HttpGet("RecentBorrowingsForMember/{memberId}", Name = "RecentBorrowingsForMember")]
+        public async Task<IActionResult> GetRecentBorrowingsForMember(int? memberId = null)
+        {
+            var currentUserId =
+                int.Parse(
+                    User.FindFirst(ClaimTypes.NameIdentifier)!
+                        .Value);
+
+            bool isAdmin =
+                User.IsInRole(Roles.Admin);
+
+            if (!memberId.HasValue)
+            {
+                memberId = await _borrowingService.GetMemberIdByUserIdAsync(currentUserId);
+
+                if (!memberId.HasValue)
+                    return BadRequest(new { message = "User does not have a member profile" });
+            }
+
+            if (!isAdmin)
+            {
+                var memberUserId = await _borrowingService.GetMemberIdByUserIdAsync(currentUserId);
+                if (memberId != memberUserId)
+                {
+                    return Forbid();
+                }
+            }
+
+            var recentBorrowings = 
+                await _borrowingService.RecentborrowingsForSelfMemberAsync(memberId.Value);
+
+            return Ok(recentBorrowings);
+        }
+
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
+        [HttpGet("TotalBorrowingsForMember", Name = "TotalBorrowingsForMemberCurrent")]
+        [HttpGet("TotalBorrowingsForMember/{memberId}", Name = "TotalBorrowingsForMember")]
+        public async Task<IActionResult> GetTotalBorrowingsForMember(int? memberId = null)
+        {
+            var currentUserId =
+                int.Parse(
+                    User.FindFirst(ClaimTypes.NameIdentifier)!
+                        .Value);
+
+            bool isAdmin =
+                User.IsInRole(Roles.Admin);
+
+            if (!memberId.HasValue)
+            {
+                memberId = await _borrowingService.GetMemberIdByUserIdAsync(currentUserId);
+
+                if (!memberId.HasValue)
+                    return BadRequest(new { message = "User does not have a member profile" });
+            }
+
+            if (!isAdmin)
+            {
+                var memberUserId = await _borrowingService.GetMemberIdByUserIdAsync(currentUserId);
+                if (memberId != memberUserId)
+                {
+                    return Forbid();
+                }
+            }
+
+            var totalBorrowings = 
+                await _borrowingService.TotalBorrowingsForSelfMemberAsync(memberId.Value);
+
+            return Ok(new { totalBorrowings });
+        }
+
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
+        [HttpGet("ActiveBorrowingsForMember", Name = "ActiveBorrowingsForMemberCurrent")]
+        [HttpGet("ActiveBorrowingsForMember/{memberId}", Name = "ActiveBorrowingsForMember")]
+        public async Task<IActionResult> GetActiveBorrowingsForMember(int? memberId = null)
+        {
+            var currentUserId =
+                int.Parse(
+                    User.FindFirst(ClaimTypes.NameIdentifier)!
+                        .Value);
+
+            bool isAdmin =
+                User.IsInRole(Roles.Admin);
+
+            if (!memberId.HasValue)
+            {
+                memberId = await _borrowingService.GetMemberIdByUserIdAsync(currentUserId);
+
+                if (!memberId.HasValue)
+                    return BadRequest(new { message = "User does not have a member profile" });
+            }
+
+            if (!isAdmin)
+            {
+                var memberUserId = await _borrowingService.GetMemberIdByUserIdAsync(currentUserId);
+                if (memberId != memberUserId)
+                {
+                    return Forbid();
+                }
+            }
+
+            var activeBorrowings = 
+                await _borrowingService.TotalActiveBorrowingsForSelfMemberAsync(memberId.Value);
+
+            return Ok(new { activeBorrowings });
+        }
+
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
+        [HttpGet("ReturnedBorrowingsForMember", Name = "ReturnedBorrowingsForMemberCurrent")]
+        [HttpGet("ReturnedBorrowingsForMember/{memberId}", Name = "ReturnedBorrowingsForMember")]
+        public async Task<IActionResult> GetReturnedBorrowingsForMember(int? memberId = null)
+        {
+            var currentUserId =
+                int.Parse(
+                    User.FindFirst(ClaimTypes.NameIdentifier)!
+                        .Value);
+
+            bool isAdmin =
+                User.IsInRole(Roles.Admin);
+
+            if (!memberId.HasValue)
+            {
+                memberId = await _borrowingService.GetMemberIdByUserIdAsync(currentUserId);
+
+                if (!memberId.HasValue)
+                    return BadRequest(new { message = "User does not have a member profile" });
+            }
+
+            if (!isAdmin)
+            {
+                var memberUserId = await _borrowingService.GetMemberIdByUserIdAsync(currentUserId);
+                if (memberId != memberUserId)
+                {
+                    return Forbid();
+                }
+            }
+
+            var returnedBorrowings = 
+                await _borrowingService.TotalReturnBorrowingsForSelfMemberAsync(memberId.Value);
+
+            return Ok(new { returnedBorrowings });
+        }
+
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
+        [HttpGet("OverdueBorrowingsForMember", Name = "OverdueBorrowingsForMemberCurrent")]
+        [HttpGet("OverdueBorrowingsForMember/{memberId}", Name = "OverdueBorrowingsForMember")]
+        public async Task<IActionResult> GetOverdueBorrowingsForMember(int? memberId = null)
+        {
+            var currentUserId =
+                int.Parse(
+                    User.FindFirst(ClaimTypes.NameIdentifier)!
+                        .Value);
+
+            bool isAdmin =
+                User.IsInRole(Roles.Admin);
+
+            if (!memberId.HasValue)
+            {
+                memberId = await _borrowingService.GetMemberIdByUserIdAsync(currentUserId);
+
+                if (!memberId.HasValue)
+                    return BadRequest(new { message = "User does not have a member profile" });
+            }
+
+            if (!isAdmin)
+            {
+                var memberUserId = await _borrowingService.GetMemberIdByUserIdAsync(currentUserId);
+                if (memberId != memberUserId)
+                {
+                    return Forbid();
+                }
+            }
+
+            var overdueBorrowings = 
+                await _borrowingService.TotalOverdueBorrowingsForSelfMemberAsync(memberId.Value);
+
+            return Ok(new { overdueBorrowings });
         }
     }
 }
