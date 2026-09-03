@@ -35,7 +35,7 @@ namespace DataAccessLayer.Repositories
 
         public async Task<Member?> GetByUserIdAsync(int userId)
         {
-            return await _context.Members.Include(m => m.Borrowings)
+            return await _context.Members.Include(m => m.Borrowings).Include(Users => Users.User)
                 .FirstOrDefaultAsync(x => x.UserId == userId);
         }
 

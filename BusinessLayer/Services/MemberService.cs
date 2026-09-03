@@ -166,7 +166,12 @@ namespace BusinessLayer.Services
                 Phone = member.Phone,
                 Address = member.Address,
                 MembershipExpiryDate = member.MembershipExpiryDate,
-                IsActive = member.IsActive
+                IsActive = member.IsActive,
+                User = new UserForMemberResponseDTO
+                {
+                    Id = member.User.Id,
+                    Email = member.User.Email
+                }
             };
         }
     }
