@@ -71,5 +71,14 @@ namespace DataAccessLayer.Repositories
             return await _context.Books
                 .CountAsync(x => !x.IsAvailable);
         }
+        public async Task<List<Book>> GetPopularBooks()
+        {
+            return await _context.Books
+                .Include(b => b.Borrowings)
+                .Include(a => a.Authors)
+                .Include(c => c.Categories)
+                .OrderByDescending(b => b.Borrowings.Count)
+                .ToListAsync();
+        }
     }
 }
