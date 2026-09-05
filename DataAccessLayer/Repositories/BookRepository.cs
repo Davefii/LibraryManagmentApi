@@ -78,6 +78,7 @@ namespace DataAccessLayer.Repositories
                 .Include(a => a.Authors)
                 .Include(c => c.Categories)
                 .OrderByDescending(b => b.Borrowings.Count)
+                .Take(4)
                 .ToListAsync();
         }
     }
