@@ -8,13 +8,17 @@ using System.Security.Claims;
 namespace LibraryApi.Controllers
 {
     [Authorize]
+    [ApiController]
+    [Route("api/[controller]")]
     public class UsersController : Controller
     {
         private readonly UserService _userService;
+        private readonly MemberService _memberService;
 
-        public UsersController(UserService userService)
+        public UsersController(UserService userService,MemberService memberService)
         {
             _userService = userService;
+            _memberService = memberService;
         }
         [Authorize(Roles = $"{Roles.Admin}")]
         // GET: api/users
@@ -50,7 +54,7 @@ namespace LibraryApi.Controllers
         [AllowAnonymous]
         // POST: api/users
         [HttpPost("CreateUserOnlyMember", Name = "CreateUser")]
-        public async Task<IActionResult> CreateUserForMember([FromBody] CreateUserOnlyForMember dto)
+        public async Task<IActionResult> CreateUserForMember([FromBody] RegisterRequestDTO dto)
         {
             var createDto = new CreateUserDTO
             {
@@ -59,9 +63,16 @@ namespace LibraryApi.Controllers
                 Role = Roles.Member,
                 IsActive = true
             };
+            int userID = await _userService.AddUser(createDto);
 
-            await _userService.AddUser(createDto);
-
+            var createMemberdto = new CreateMemberDTO
+            {
+                Name = dto.FullName,
+                Phone = dto.PhoneNumber,
+                Address = dto.Address,
+                MembershipExpiryDate = DateTime.UtcNow.AddYears(5)
+            };
+            await _memberService.AddMember(userID,createMemberdto);
             return Ok("User Created Successfully");
         }
         [Authorize(Roles = $"{Roles.Admin}")]
@@ -114,6 +125,20 @@ namespace LibraryApi.Controllers
             await _userService.DeleteUser(id);
 
             return Ok("User Deleted Successfully");
+        }
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
+        [HttpGet("GetCurrentUser", Name = "GetCurrentUser")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            int currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var user = await _userService.GetUserById(currentUserId);
+            var Curentuser = new CurrentUserDTO
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Role = user.Role
+            };
+            return Ok(Curentuser);
         }
     }
 }

@@ -12,15 +12,19 @@ namespace BusinessLayer.DTOs
         [Required][MinLength(8)]
         public string Password { get; set; } = null!;
         [Required][MaxLength(100)]
-        public string FirstName { get; set; } = null!;
+        public string FullName { get; set; } = null!;
         [Required][MaxLength(100)]
-        public string LastName { get; set; } = null!;
-        [MaxLength(20)]
         public string? PhoneNumber { get; set; }
         [MaxLength(200)]
         public string? Address { get; set; }
     }
-
+    public class CreateMemberForNewUserDTO
+    {
+        [Required][MaxLength(150)] public string Name { get; set; } = null!;
+        [Required][MaxLength(20)] public string? Phone { get; set; }
+        [Required][MaxLength(200)] public string? Address { get; set; }
+        [Required] public DateTime MembershipExpiryDate { get; set; }
+    }
     public class TokenResponseDTO
     {
         [Required]
@@ -81,11 +85,17 @@ namespace BusinessLayer.DTOs
         public DateTime CreatedAt { get; set; }
         public bool IsActive { get; set; }
     }
+    public class CurrentUserDTO
+    {
+        public int Id { get; set; }
+        public string Email { get; set; }
+        public string Role { get; set; }
+    }
     public class UserResponseDTO
     {
         public int Id { get; set; }
-        [Required] public string Email { get; set; } = null!;
-        [Required] public string Role { get; set; } = null!;
+        public string Email { get; set; } = null!;
+        public string Role { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public bool IsActive { get; set; }
     }

@@ -56,7 +56,7 @@ namespace BusinessLayer.Services
             };
         }
 
-        public async Task AddUser(CreateUserDTO dto)
+        public async Task<int> AddUser(CreateUserDTO dto)
         {
             var existingUser =
                 await _userRepository.GetByEmailAsync(dto.Email);
@@ -75,7 +75,8 @@ namespace BusinessLayer.Services
                 CreatedAt = DateTime.UtcNow
             };
 
-            await _userRepository.AddAsync(user);
+            int userID = await _userRepository.AddAsync(user);
+            return userID;
         }
 
 

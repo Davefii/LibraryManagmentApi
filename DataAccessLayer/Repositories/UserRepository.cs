@@ -37,11 +37,12 @@ namespace DataAccessLayer.Repositories
                 .FirstOrDefaultAsync(x => x.Email == email);
         }
 
-        public async Task AddAsync(User user)
+        public async Task<int> AddAsync(User user)
         {
             await _context.Users.AddAsync(user);
 
             await _context.SaveChangesAsync();
+            return user.Id;
         }
 
         public async Task UpdateAsync(User user)
