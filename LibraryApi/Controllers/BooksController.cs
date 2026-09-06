@@ -29,6 +29,22 @@ namespace LibraryApi.Controllers
             _category = category;
         }
         [AllowAnonymous]
+        [HttpGet("ListBooksByAuthorForAnyone/{AuthorId}", Name = "GetallBooksByAuthorForAnyone")]
+        public async Task<IActionResult> GetAllBooksByAuthorForAnyone(int AuthorId)
+        {
+            var books = await _bookservice.GetAllByAuthor(AuthorId);
+
+            return Ok(books);
+        }
+        [AllowAnonymous]
+        [HttpGet("ListBooksByCategorieForAnyone/{categoryId}", Name = "GetallBooksByCategorieForAnyone")]
+        public async Task<IActionResult> GetAllBooksByCategorieForAnyone(int categoryId)
+        {
+            var books = await _bookservice.GetAllByCategory(categoryId);
+
+            return Ok(books);
+        }
+        [AllowAnonymous]
         [HttpGet("ListBooksForAnyone", Name = "GetallBooksForAnyone")]
         public async Task<IActionResult> GetAllBooksForAnyone()
         {
@@ -169,9 +185,25 @@ namespace LibraryApi.Controllers
 
             await _bookservice.DeleteBook(book.Id);
 
-            
+
 
             return Ok("Book Deleted Successfully");
+        }
+
+        [AllowAnonymous]
+        [HttpGet("TotalBooksByAuthor/{authorId}", Name = "GetTotalBooksByAuthor")]
+        public async Task<IActionResult> GetTotalBooksByAuthor(int authorId)
+        {
+            var totalBooks = await _bookservice.GetTotalBookByAuthor(authorId);
+            return Ok(new { authorId = authorId, totalBooks = totalBooks });
+        }
+
+        [AllowAnonymous]
+        [HttpGet("TotalBooksByCategory/{categoryId}", Name = "GetTotalBooksByCategory")]
+        public async Task<IActionResult> GetTotalBooksByCategory(int categoryId)
+        {
+            var totalBooks = await _bookservice.GetTotalBookByCategory(categoryId);
+            return Ok(new { categoryId = categoryId, totalBooks = totalBooks });
         }
     }
 }

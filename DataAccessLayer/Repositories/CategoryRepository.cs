@@ -31,6 +31,7 @@ namespace DataAccessLayer.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        
         public async Task<bool> ExistsAsync(int id)
         {
             return await _context.Categories.AnyAsync(a => a.Id == id);

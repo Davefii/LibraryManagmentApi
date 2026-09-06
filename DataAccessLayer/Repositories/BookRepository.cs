@@ -21,23 +21,53 @@ namespace DataAccessLayer.Repositories
         // Get All Books
         public async Task<List<Book>> GetAllAsync()
         {
-            return await _context.Books.AsNoTracking().Include(x => x.Authors).Include(C => C.Categories).ToListAsync();
+            return await _context.Books
+                .AsNoTracking()
+                .Include(x => x.Authors)
+                .Include(C => C.Categories)
+                .ToListAsync();
         }
-
+        public async Task<List<Book>> GetAllByCategoryAsync(int categoryId)
+        {
+            return await _context.Books
+                .AsNoTracking()
+                .Include(x => x.Authors)
+                .Include(c => c.Categories)
+                .Where(b => b.Categories.Any(c => c.Id == categoryId))
+                .ToListAsync();
+        }
+        public async Task<List<Book>> GetAllByAuthorAsync(int authorId)
+        {
+            return await _context.Books
+                .AsNoTracking()
+                .Include(x => x.Authors)
+                .Include(c => c.Categories)
+                .Where(b => b.Authors.Any(a => a.Id == authorId))
+                .ToListAsync();
+        }
         // Get Book By Id
         public async Task<Book?> GetByIdAsync(int id)
         {
-            return await _context.Books.Include(x => x.Authors).Include(C => C.Categories).FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Books
+                .Include(x => x.Authors)
+                .Include(C => C.Categories)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
         // Get Book By title
         public async Task<Book?> GetByTitleAsync(string title)
         {
-            return await _context.Books.Include(x => x.Authors).Include(C => C.Categories).FirstOrDefaultAsync(b => b.Title == title);
+            return await _context.Books
+                .Include(x => x.Authors)
+                .Include(C => C.Categories)
+                .FirstOrDefaultAsync(b => b.Title == title);
         }
         // Get ISBN By title
         public async Task<Book?> GetByISBNAsync(string isbn)
         {
-            return await _context.Books.Include(x => x.Authors).Include(C => C.Categories).FirstOrDefaultAsync(b => b.Isbn == isbn);
+            return await _context.Books
+                .Include(x => x.Authors)
+                .Include(C => C.Categories)
+                .FirstOrDefaultAsync(b => b.Isbn == isbn);
         }
         // Add Book
         public async Task<int> AddAsync(Book book)
@@ -65,6 +95,18 @@ namespace DataAccessLayer.Repositories
         public async Task<int> TotalBooks()
         {
             return await _context.Books.CountAsync();
+        }
+        public async Task<int> TotalBookByCategorie(int CategorieID)
+        {
+            return await _context.Books
+                .Where(bc => bc.Categories.Any(c => c.Id == CategorieID))
+                .CountAsync();
+        }
+        public async Task<int> TotalBookByAuthor(int AuthorID)
+        {
+            return await _context.Books
+                .Where(ba => ba.Authors.Any(a => a.Id == AuthorID))
+                .CountAsync();
         }
         public async Task<int> GetUnavailableBooksCountAsync()
         {

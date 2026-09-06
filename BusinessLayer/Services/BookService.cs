@@ -52,6 +52,66 @@ namespace BusinessLayer.Services
                 }).ToList(),
             }).ToList();
         }
+        public async Task<List<BookResponseDTO>> GetAllByCategory(int categoryId)
+        {
+            var books = await _bookRepository.GetAllByCategoryAsync(categoryId);
+
+            return books.Select(book => new BookResponseDTO
+            {
+                Id = book.Id,
+                Title = book.Title,
+                ISBN = book.Isbn,
+                Description = book.Description,
+                PublishYear = book.PublishYear,
+                CopiesCount = book.TotalCopies,
+                AvailableCopies = book.AvailableCopies,
+                IsAvailable = book.IsAvailable,
+                CreatedAt = book.CreatedAt,
+                UpdatedAt = book.UpdatedAt,
+                CoverImage = book.CoverImage,
+                Authors = book.Authors.Select(a => new AuthorSummaryDTO
+                {
+                    Id = a.Id,
+                    FirstName = a.FirstName,
+                    LastName = a.LastName
+                }).ToList(),
+                Categories = book.Categories.Select(c => new CategorySummaryDTO
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                }).ToList(),
+            }).ToList();
+        }
+        public async Task<List<BookResponseDTO>> GetAllByAuthor(int AuthorId)
+        {
+            var books = await _bookRepository.GetAllByAuthorAsync(AuthorId);
+
+            return books.Select(book => new BookResponseDTO
+            {
+                Id = book.Id,
+                Title = book.Title,
+                ISBN = book.Isbn,
+                Description = book.Description,
+                PublishYear = book.PublishYear,
+                CopiesCount = book.TotalCopies,
+                AvailableCopies = book.AvailableCopies,
+                IsAvailable = book.IsAvailable,
+                CreatedAt = book.CreatedAt,
+                UpdatedAt = book.UpdatedAt,
+                CoverImage = book.CoverImage,
+                Authors = book.Authors.Select(a => new AuthorSummaryDTO
+                {
+                    Id = a.Id,
+                    FirstName = a.FirstName,
+                    LastName = a.LastName
+                }).ToList(),
+                Categories = book.Categories.Select(c => new CategorySummaryDTO
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                }).ToList(),
+            }).ToList();
+        }
         public async Task<BookResponseDTO?> GetBookById(int id)
         {
            
@@ -250,6 +310,16 @@ namespace BusinessLayer.Services
                     Name = c.Name
                 }).ToList(),
             }).ToList();
+        }
+
+        public async Task<int> GetTotalBookByAuthor(int authorId)
+        {
+            return await _bookRepository.TotalBookByAuthor(authorId);
+        }
+
+        public async Task<int> GetTotalBookByCategory(int categoryId)
+        {
+            return await _bookRepository.TotalBookByCategorie(categoryId);
         }
     }
 }
