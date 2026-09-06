@@ -68,7 +68,7 @@ namespace LibraryApi.Controllers
 
             return Ok(books);
         }
-        [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
+        [AllowAnonymous]
         [HttpGet("GetBookByID{id}", Name = "GetBookByID")]
         public async Task<IActionResult> GetBookById(int id)
         {

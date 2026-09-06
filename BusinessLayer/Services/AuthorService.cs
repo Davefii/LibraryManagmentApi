@@ -30,6 +30,7 @@ namespace BusinessLayer.Services
                 Nationality = authors.Nationality,
                 BirthDate = authors.BirthDate,
                 ImageAuthor = authors.ImageAuthor,
+                TotalBooks = authors.Books.Count,
                 Books = authors.Books.Select(book => new Book
                 {
                     Id = book.Id,

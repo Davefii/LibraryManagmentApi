@@ -202,7 +202,8 @@ namespace BusinessLayer.DTOs
 
         public int? ParentId { get; set; }
 
-        public  List<BookResponseDTO> Books { get; set; } = new();
+        public int TotalBooks { get; set; }
+        public List<BookResponseDTO> Books { get; set; } = new();
     }
     //public partial class Category
     //{

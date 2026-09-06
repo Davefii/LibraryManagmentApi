@@ -27,6 +27,7 @@ namespace BusinessLayer.Services
                 Name = category.Name,
                 Description = category.Description,
                 ParentId = category.ParentId,
+                TotalBooks = category.Books.Count(),
                 Books = category.Books.Select(book => new BookResponseDTO
                 {
                     Id = book.Id,
@@ -68,6 +69,7 @@ namespace BusinessLayer.Services
                 Name = category.Name,
                 Description = category.Description,
                 ParentId = category.ParentId,
+                TotalBooks = category.Books.Count(),
                 Books = category.Books.Select(book => new BookResponseDTO
                 {
                     Id = book.Id,
