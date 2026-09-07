@@ -87,9 +87,16 @@ namespace LibraryApi.Controllers
         public async Task<IActionResult> AddBorrowing(
             CreateBorrowingDTO dto)
         {
-            await _borrowingService.AddBorrowing(dto);
-
-            return Ok("Borrow Book Successfulley");
+            try
+            {
+                await _borrowingService.AddBorrowing(dto);
+                return Ok("Borrow Book Successfully");
+            }
+            catch (Exception ex)
+            {
+                // Return 400 with the error message
+                return BadRequest(new { message = ex.Message });
+            }
         }
         [Authorize(Roles = $"{Roles.Admin}")]
         [HttpPut("UpdateBorrowing/{id}", Name = "UpdateBorrowing")]
