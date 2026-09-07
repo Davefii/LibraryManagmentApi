@@ -54,23 +54,14 @@ namespace BusinessLayer.Services
                 new BorrowingResponseDTO
                 {
                     Id = b.Id,
-
                     MemberId = b.MemberId,
-
                     UserId = b.Member.UserId,
-
                     BookId = b.BookId,
-
                     BorrowDate = b.BorrowDate,
-
                     DueDate = b.DueDate,
-
                     ReturnDate = b.ReturnDate,
-
                     IsReturned = b.IsReturned,
-
                     CreatedAt = b.CreatedAt,
-
                     Book = new BookForReadOnlyDTOSmall
                     {
                         Id = b.Book.Id,
@@ -80,7 +71,6 @@ namespace BusinessLayer.Services
                         PublishYear = b.Book.PublishYear,
                         CoverImage = b.Book.CoverImage,
                     },
-
                     Member = new MemberForBorrowingsDTO
                     {
                         Id = b.Member.Id,
@@ -89,7 +79,183 @@ namespace BusinessLayer.Services
                         MembershipExpiryDate = b.Member.MembershipExpiryDate,
                         IsActive = b.Member.IsActive,
                     },
+                    User = new UserResponseDTO
+                    {
+                        Id = b.Member.User.Id,
+                        Email = b.Member.User.Email,
+                        Role = b.Member.User.Role,
+                        CreatedAt = b.Member.User.CreatedAt,
+                        IsActive = b.Member.User.IsActive
+                    }
 
+                }).ToList();
+        }
+        public async Task<List<BorrowingResponseDTO>> GetAllBorrowingsByMemberName(string memberName)
+        {
+            var borrowings = await _borrowingRepository.GetAllBorrowingsByMemberNameAsync(memberName);
+
+            return borrowings.Select(b =>
+                new BorrowingResponseDTO
+                {
+                    Id = b.Id,
+                    MemberId = b.MemberId,
+                    UserId = b.Member.UserId,
+                    BookId = b.BookId,
+                    BorrowDate = b.BorrowDate,
+                    DueDate = b.DueDate,
+                    ReturnDate = b.ReturnDate,
+                    IsReturned = b.IsReturned,
+                    CreatedAt = b.CreatedAt,
+                    Book = new BookForReadOnlyDTOSmall
+                    {
+                        Id = b.Book.Id,
+                        Title = b.Book.Title,
+                        ISBN = b.Book.Isbn,
+                        Description = b.Book.Description,
+                        PublishYear = b.Book.PublishYear,
+                        CoverImage = b.Book.CoverImage,
+                    },
+                    Member = new MemberForBorrowingsDTO
+                    {
+                        Id = b.Member.Id,
+                        UserId = b.Member.UserId,
+                        Name = b.Member.Name,
+                        MembershipExpiryDate = b.Member.MembershipExpiryDate,
+                        IsActive = b.Member.IsActive,
+                    },
+                    User = new UserResponseDTO
+                    {
+                        Id = b.Member.User.Id,
+                        Email = b.Member.User.Email,
+                        Role = b.Member.User.Role,
+                        CreatedAt = b.Member.User.CreatedAt,
+                        IsActive = b.Member.User.IsActive
+                    }
+
+                }).ToList();
+        }
+        public async Task<List<BorrowingResponseDTO>> GetAllBorrowingsByUserEmail(string email)
+        {
+            var borrowings = await _borrowingRepository.GetAllBorrowingsByUserNameAsync(email);
+
+            return borrowings.Select(b =>
+                new BorrowingResponseDTO
+                {
+                    Id = b.Id,
+                    MemberId = b.MemberId,
+                    UserId = b.Member.UserId,
+                    BookId = b.BookId,
+                    BorrowDate = b.BorrowDate,
+                    DueDate = b.DueDate,
+                    ReturnDate = b.ReturnDate,
+                    IsReturned = b.IsReturned,
+                    CreatedAt = b.CreatedAt,
+                    Book = new BookForReadOnlyDTOSmall
+                    {
+                        Id = b.Book.Id,
+                        Title = b.Book.Title,
+                        ISBN = b.Book.Isbn,
+                        Description = b.Book.Description,
+                        PublishYear = b.Book.PublishYear,
+                        CoverImage = b.Book.CoverImage,
+                    },
+                    Member = new MemberForBorrowingsDTO
+                    {
+                        Id = b.Member.Id,
+                        UserId = b.Member.UserId,
+                        Name = b.Member.Name,
+                        MembershipExpiryDate = b.Member.MembershipExpiryDate,
+                        IsActive = b.Member.IsActive,
+                    },
+                    User = new UserResponseDTO
+                    {
+                        Id = b.Member.User.Id,
+                        Email = b.Member.User.Email,
+                        Role = b.Member.User.Role,
+                        CreatedAt = b.Member.User.CreatedAt,
+                        IsActive = b.Member.User.IsActive
+                    }
+
+                }).ToList();
+        }
+        public async Task<List<BorrowingResponseDTO>> GetAllBorrowingsByBookTitle(string BookTitle)
+        {
+            var borrowings = await _borrowingRepository.GetAllBorrowingsByBookTitleAsync(BookTitle);
+
+            return borrowings.Select(b =>
+                new BorrowingResponseDTO
+                {
+                    Id = b.Id,
+                    MemberId = b.MemberId,
+                    UserId = b.Member.UserId,
+                    BookId = b.BookId,
+                    BorrowDate = b.BorrowDate,
+                    DueDate = b.DueDate,
+                    ReturnDate = b.ReturnDate,
+                    IsReturned = b.IsReturned,
+                    CreatedAt = b.CreatedAt,
+                    Book = new BookForReadOnlyDTOSmall
+                    {
+                        Id = b.Book.Id,
+                        Title = b.Book.Title,
+                        ISBN = b.Book.Isbn,
+                        Description = b.Book.Description,
+                        PublishYear = b.Book.PublishYear,
+                        CoverImage = b.Book.CoverImage,
+                    },
+                    Member = new MemberForBorrowingsDTO
+                    {
+                        Id = b.Member.Id,
+                        UserId = b.Member.UserId,
+                        Name = b.Member.Name,
+                        MembershipExpiryDate = b.Member.MembershipExpiryDate,
+                        IsActive = b.Member.IsActive,
+                    },
+                    User = new UserResponseDTO
+                    {
+                        Id = b.Member.User.Id,
+                        Email = b.Member.User.Email,
+                        Role = b.Member.User.Role,
+                        CreatedAt = b.Member.User.CreatedAt,
+                        IsActive = b.Member.User.IsActive
+                    }
+
+                }).ToList();
+        }
+
+        public async Task<List<BorrowingResponseDTO>> GetAllBorrowingsReturnedByStatus(string Status)
+        {
+            var borrowings = await _borrowingRepository.GetAllBorrowingsReturnedByStatusAsync(Status);
+
+            return borrowings.Select(b =>
+                new BorrowingResponseDTO
+                {
+                    Id = b.Id,
+                    MemberId = b.MemberId,
+                    UserId = b.Member.UserId,
+                    BookId = b.BookId,
+                    BorrowDate = b.BorrowDate,
+                    DueDate = b.DueDate,
+                    ReturnDate = b.ReturnDate,
+                    IsReturned = b.IsReturned,
+                    CreatedAt = b.CreatedAt,
+                    Book = new BookForReadOnlyDTOSmall
+                    {
+                        Id = b.Book.Id,
+                        Title = b.Book.Title,
+                        ISBN = b.Book.Isbn,
+                        Description = b.Book.Description,
+                        PublishYear = b.Book.PublishYear,
+                        CoverImage = b.Book.CoverImage,
+                    },
+                    Member = new MemberForBorrowingsDTO
+                    {
+                        Id = b.Member.Id,
+                        UserId = b.Member.UserId,
+                        Name = b.Member.Name,
+                        MembershipExpiryDate = b.Member.MembershipExpiryDate,
+                        IsActive = b.Member.IsActive,
+                    },
                     User = new UserResponseDTO
                     {
                         Id = b.Member.User.Id,

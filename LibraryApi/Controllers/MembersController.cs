@@ -24,6 +24,18 @@ namespace LibraryApi.Controllers
         {
             return Ok(await _memberService.GetAllMembers());
         }
+        [Authorize(Roles = $"{Roles.Admin}")]
+        [HttpGet("ListMembersByName/{Name}", Name = "ListMembersByName")]
+        public async Task<IActionResult> GetAllMembersByName(string Name)
+        {
+            return Ok(await _memberService.GetAllMembersWithNameMember(Name));
+        }
+        [Authorize(Roles = $"{Roles.Admin}")]
+        [HttpGet("ListMembersByUserEmail/{Email}", Name = "ListMembersByUserEmail")]
+        public async Task<IActionResult> GetAllMembersByEmail(string Email)
+        {
+            return Ok(await _memberService.GetAllMembersWithUserEmail(Email));
+        }
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         [HttpGet("Me", Name = "GetMyMember")]
         public async Task<IActionResult> GetMemberOnlyMe()

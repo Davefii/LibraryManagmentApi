@@ -12,7 +12,6 @@ namespace DataAccessLayer.Repositories
     public class MemberRepository
     {
         private readonly AppDbContext _context;
-
         public MemberRepository(AppDbContext context)
         {
             _context = context;
@@ -26,7 +25,24 @@ namespace DataAccessLayer.Repositories
                 .Include(m => m.Borrowings)
                 .ToListAsync();
         }
-
+        public async Task<List<Member>> GetAllMemberWithNameAsync(string Name) 
+        {
+            return await _context.Members
+                .AsNoTracking()
+                .Include(m => m.User)
+                .Include(m => m.Borrowings)
+                .Where(m => EF.Functions.Like(m.Name, $"%{Name}%"))
+                .ToListAsync();
+        }
+        public async Task<List<Member>> GetAllMemberWithEmailAsync(string userEmail)
+        {
+            return await _context.Members
+                .AsNoTracking()
+                .Include(m => m.User)
+                .Include(m => m.Borrowings)
+                .Where(m => EF.Functions.Like(m.User.Email, $"%{userEmail}%"))
+                .ToListAsync();
+        }
         public async Task<Member?> GetMemberByIdAsync(int id)
         {
             return await _context.Members.Include(m => m.User).Include(m => m.Borrowings)

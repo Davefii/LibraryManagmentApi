@@ -77,6 +77,25 @@ namespace LibraryApi.Controllers
                 return NotFound();
             return Ok(book);
         }
+        [AllowAnonymous]
+        [HttpGet("GetListBooksByTitle/{title}", Name = "GetListBooksByTitle")]
+        public async Task<IActionResult> GetListBooksByTitle(string title)
+        {
+            var books = await _bookservice.GetListBooksByTitle(title);
+            if (books == null || books.Count == 0)
+                return NotFound(new { message = "No books found with the given title" });
+            return Ok(books);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("GetListBooksByISBN/{isbn}", Name = "GetListBooksByISBN")]
+        public async Task<IActionResult> GetListBooksByISBN(string isbn)
+        {
+            var books = await _bookservice.GetListBooksByTitle(isbn);
+            if (books == null || books.Count == 0)
+                return NotFound(new { message = "No books found with the given ISBN" });
+            return Ok(books);
+        }
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         [HttpGet("GetBookByName/{title}", Name = "GetBookByName")]
         public async Task<IActionResult> GetBookByName(string title)

@@ -25,6 +25,34 @@ namespace LibraryApi.Controllers
             return Ok(
                 await _borrowingService.GetAllBorrowings());
         }
+        [Authorize(Roles = $"{Roles.Admin}")]
+        [HttpGet("ListBorrowingsByMemberName/{memberName}", Name = "ListBorrowingsByMemberName")]
+        public async Task<IActionResult> GetAllBorrowingByMemberName(string memberName)
+        {
+            return Ok(
+                await _borrowingService.GetAllBorrowingsByMemberName(memberName));
+        }
+        [Authorize(Roles = $"{Roles.Admin}")]
+        [HttpGet("ListBorrowingsByEmailUser/{email}", Name = "ListBorrowingsByEmailUser")]
+        public async Task<IActionResult> GetAllBorrowingByUserEmail(string email)
+        {
+            return Ok(
+                await _borrowingService.GetAllBorrowingsByUserEmail(email));
+        }
+        [Authorize(Roles = $"{Roles.Admin}")]
+        [HttpGet("ListBorrowingsBookTitle/{BookTitle}", Name = "ListBorrowingsByBookTitle")]
+        public async Task<IActionResult> GetAllBorrowingByBookTitle(string BookTitle)
+        {
+            return Ok(
+                await _borrowingService.GetAllBorrowingsByBookTitle(BookTitle));
+        }
+        [Authorize(Roles = $"{Roles.Admin}")]
+        [HttpGet("GetAllBorrowingsReturnedByStatus/{Status}", Name = "GetAllBorrowingsReturnedByStatus")]
+        public async Task<IActionResult> GetAllBorrowingsReturnedByStatus(string Status)
+        {
+            var borrowings = await _borrowingService.GetAllBorrowingsReturnedByStatus(Status);
+            return Ok(borrowings);
+        }
         [Authorize(Roles = $"{Roles.Admin},{Roles.Member}")]
         [HttpGet("GetBorrowingBy/{id}", Name = "GetBorrowingById")]
         public async Task<IActionResult> GetBorrowingById(

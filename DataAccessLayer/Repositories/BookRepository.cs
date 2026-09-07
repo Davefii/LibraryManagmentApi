@@ -53,6 +53,24 @@ namespace DataAccessLayer.Repositories
                 .Include(C => C.Categories)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
+        // Get List Book By title
+        public async Task<List<Book>> GetBookListByTitleAsync(string title)
+        {
+            return await _context.Books
+                .Include(x => x.Authors)
+                .Include(C => C.Categories)
+                .Where(b => EF.Functions.Like(b.Title, $"%{title}%"))
+                .ToListAsync();
+        }
+        // Get ISBN By title
+        public async Task<List<Book>> GetBookListByISBNAsync(string isbn)
+        {
+            return await _context.Books
+                .Include(x => x.Authors)
+                .Include(C => C.Categories)
+                .Where(b => EF.Functions.Like(b.Title, $"%{isbn}%"))
+                .ToListAsync();
+        }
         // Get Book By title
         public async Task<Book?> GetByTitleAsync(string title)
         {
@@ -61,7 +79,7 @@ namespace DataAccessLayer.Repositories
                 .Include(C => C.Categories)
                 .FirstOrDefaultAsync(b => b.Title == title);
         }
-        // Get ISBN By title
+        // Get Book By ISBN
         public async Task<Book?> GetByISBNAsync(string isbn)
         {
             return await _context.Books

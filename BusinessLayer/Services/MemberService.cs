@@ -51,7 +51,50 @@ namespace BusinessLayer.Services
                 TotalBorrowings = member.Borrowings.Count(),
             }).ToList();
         }
+        public async Task<List<MemberResponseDTO>> GetAllMembersWithNameMember(string Name)
+        {
+            var members = await _memberRepository.GetAllMemberWithNameAsync(Name);
 
+            return members.Select(member => new MemberResponseDTO
+            {
+                Id = member.Id,
+                UserId = member.UserId,
+                Name = member.Name,
+                Phone = member.Phone,
+                Address = member.Address,
+                MembershipExpiryDate = member.MembershipExpiryDate,
+                IsActive = member.IsActive,
+                User = new UserForMemberResponseDTO
+                {
+                    Id = member.User.Id,
+                    Email = member.User.Email
+                },
+                ActiveBorrowings = member.Borrowings.Where(B => !B.IsReturned).Count(),
+                TotalBorrowings = member.Borrowings.Count(),
+            }).ToList();
+        }
+        public async Task<List<MemberResponseDTO>> GetAllMembersWithUserEmail(string userEmail)
+        {
+            var members = await _memberRepository.GetAllMemberWithEmailAsync(userEmail);
+
+            return members.Select(member => new MemberResponseDTO
+            {
+                Id = member.Id,
+                UserId = member.UserId,
+                Name = member.Name,
+                Phone = member.Phone,
+                Address = member.Address,
+                MembershipExpiryDate = member.MembershipExpiryDate,
+                IsActive = member.IsActive,
+                User = new UserForMemberResponseDTO
+                {
+                    Id = member.User.Id,
+                    Email = member.User.Email
+                },
+                ActiveBorrowings = member.Borrowings.Where(B => !B.IsReturned).Count(),
+                TotalBorrowings = member.Borrowings.Count(),
+            }).ToList();
+        }
         public async Task<MemberResponseDTO?> GetMemberById(int id)
         {
             var member = await _memberRepository.GetMemberByIdAsync(id);

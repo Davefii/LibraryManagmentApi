@@ -112,6 +112,68 @@ namespace BusinessLayer.Services
                 }).ToList(),
             }).ToList();
         }
+        public async Task<List<BookResponseDTO>> GetListBooksByTitle(string title)
+        {
+            var books = await _bookRepository.GetBookListByTitleAsync(title);
+            if (books == null)
+                return null;
+            return books.Select(book => new BookResponseDTO
+            {
+                Id = book.Id,
+                Title = book.Title,
+                ISBN = book.Isbn,
+                Description = book.Description,
+                PublishYear = book.PublishYear,
+                CopiesCount = book.TotalCopies,
+                AvailableCopies = book.AvailableCopies,
+                IsAvailable = book.IsAvailable,
+                CreatedAt = book.CreatedAt,
+                UpdatedAt = book.UpdatedAt,
+                CoverImage = book.CoverImage,
+                Authors = book.Authors.Select(a => new AuthorSummaryDTO
+                {
+                    Id = a.Id,
+                    FirstName = a.FirstName,
+                    LastName = a.LastName
+                }).ToList(),
+                Categories = book.Categories.Select(c => new CategorySummaryDTO
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                }).ToList(),
+            }).ToList();
+        }
+        public async Task<List<BookResponseDTO>> GetListBooksByISBN(string ISBN)
+        {
+            var books = await _bookRepository.GetBookListByISBNAsync(ISBN);
+            if (books == null)
+                return null;
+            return books.Select(book => new BookResponseDTO
+            {
+                Id = book.Id,
+                Title = book.Title,
+                ISBN = book.Isbn,
+                Description = book.Description,
+                PublishYear = book.PublishYear,
+                CopiesCount = book.TotalCopies,
+                AvailableCopies = book.AvailableCopies,
+                IsAvailable = book.IsAvailable,
+                CreatedAt = book.CreatedAt,
+                UpdatedAt = book.UpdatedAt,
+                CoverImage = book.CoverImage,
+                Authors = book.Authors.Select(a => new AuthorSummaryDTO
+                {
+                    Id = a.Id,
+                    FirstName = a.FirstName,
+                    LastName = a.LastName
+                }).ToList(),
+                Categories = book.Categories.Select(c => new CategorySummaryDTO
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                }).ToList(),
+            }).ToList();
+        }
         public async Task<BookResponseDTO?> GetBookById(int id)
         {
            

@@ -4,8 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DataAccessLayer.Repositories
 {
@@ -29,7 +31,66 @@ namespace DataAccessLayer.Repositories
                 .ThenInclude(user => user.User)
                 .ToListAsync();
         }
-
+        public async Task<List<Borrowing>> GetAllBorrowingsByMemberNameAsync(string memberName)
+        {
+            return await _context.Borrowings
+                .AsNoTracking()
+                .Include(book => book.Book)
+                .Include(member => member.Member)
+                .ThenInclude(user => user.User)
+                .Where(B => EF.Functions.Like(B.Member.Name, $"%{memberName}%"))
+                .ToListAsync();
+        }
+        public async Task<List<Borrowing>> GetAllBorrowingsByUserNameAsync(string UserEmail)
+        {
+            return await _context.Borrowings
+                .AsNoTracking()
+                .Include(book => book.Book)
+                .Include(member => member.Member)
+                .ThenInclude(user => user.User)
+                .Where(B => EF.Functions.Like(B.Member.User.Email, $"%{UserEmail}%"))
+                .ToListAsync();
+        }
+        public async Task<List<Borrowing>> GetAllBorrowingsReturnedByStatusAsync(string Status)
+        {
+            var Query = _context.Borrowings
+                 .AsNoTracking()
+                 .Include(book => book.Book)
+                 .Include(member => member.Member)
+                 .ThenInclude(user => user.User)
+                 .Where(B => B.IsReturned)
+                 .AsQueryable();
+            var today = DateTime.Today;
+            if (!string.IsNullOrEmpty(Status))
+            {
+                switch (Status.ToLower())
+                {
+                    case "active":
+                        Query = Query.Where(b => !b.IsReturned && b.DueDate >= today);
+                        break;
+                    case "returned":
+                        Query = Query.Where(b => b.IsReturned);
+                        break;
+                    case "overdue":
+                        Query = Query.Where(b => !b.IsReturned && b.DueDate < today);
+                        break;
+                    default:
+                        
+                        break;
+                }
+            }
+            return await Query.ToListAsync();
+        }
+        public async Task<List<Borrowing>> GetAllBorrowingsByBookTitleAsync(string BookTitle)
+        {
+            return await _context.Borrowings
+                .AsNoTracking()
+                .Include(book => book.Book)
+                .Include(member => member.Member)
+                .ThenInclude(user => user.User)
+                .Where(B => EF.Functions.Like(B.Book.Title, $"%{BookTitle}%"))
+                .ToListAsync();
+        }
         public async Task<Borrowing?> GetByIdAsync(int id)
         {
             return await _context.Borrowings
