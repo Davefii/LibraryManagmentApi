@@ -1,5 +1,7 @@
-﻿using DataAccessLayer.Entities;
+﻿using BusinessLayer.Services.Interface;
+using DataAccessLayer.Entities;
 using DataAccessLayer.Repositories;
+using DataAccessLayer.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {
-    public class RefreshTokenService
+    public class RefreshTokenService : IRefreshTokenService
     {
-        private readonly UserRepository _userRepository;
-        private readonly RefreshTokenRepository _refreshTokenRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
         public RefreshTokenService(
-                UserRepository userRepository,
-                RefreshTokenRepository refreshTokenRepository)
+                IUserRepository userRepository,
+                IRefreshTokenRepository refreshTokenRepository)
         {
             _userRepository = userRepository;
             _refreshTokenRepository = refreshTokenRepository;

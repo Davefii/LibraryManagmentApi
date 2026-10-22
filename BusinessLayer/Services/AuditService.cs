@@ -7,18 +7,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccessLayer.Repositories;
+using BusinessLayer.Services.Interface;
+using DataAccessLayer.Repositories.Interfaces;
 
 namespace BusinessLayer.Services
 {
-    public class AuditService
+    public class AuditService : IAuditService
     {
-        private readonly AuditRepository _auditRepository;
+        private readonly IAudit _auditRepository;
 
         public AuditService(
-            AuditRepository auditRepository)
+            IAudit auditRepository)
         {
             _auditRepository = auditRepository;
-        }
+        }// Don't forget Controller
 
         public async Task<List<AuditLogResponseDTO>> LoadAuditLogsAsync()
         {

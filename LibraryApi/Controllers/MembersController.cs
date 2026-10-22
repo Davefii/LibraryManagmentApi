@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.DTOs;
 using BusinessLayer.Services;
+using BusinessLayer.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -11,10 +12,10 @@ namespace LibraryApi.Controllers
     [Route("api/[controller]")]
     public class MembersController : Controller
     {
-        private readonly MemberService _memberService;
-        private readonly UserProfileService _userProfileService;
+        private readonly IMemberService _memberService;
+        //private readonly IUserProfileService _userProfileService;
 
-        public MembersController(MemberService memberService)
+        public MembersController(IMemberService memberService)
         {
             _memberService = memberService;
         }

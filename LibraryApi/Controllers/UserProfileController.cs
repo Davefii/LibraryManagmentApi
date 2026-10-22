@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.DTOs;
 using BusinessLayer.Services;
+using BusinessLayer.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +11,9 @@ namespace LibraryApi.Controllers
     [Route("api/[controller]")]
     public class UserProfileController : Controller
     {
-        private readonly UserProfileService _profileService;
+        private readonly IUserProfileService _profileService;
 
-        public UserProfileController(UserProfileService profileService)
+        public UserProfileController(IUserProfileService profileService)
         {
             _profileService = profileService;
         }

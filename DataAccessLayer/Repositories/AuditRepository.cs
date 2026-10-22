@@ -1,5 +1,6 @@
 using DataAccessLayer.Context;
 using DataAccessLayer.Entities;
+using DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories
 {
-    public class AuditRepository
+    public class AuditRepository : IAudit
     {
         private readonly AppDbContext _context;
 

@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.DTOs;
+using BusinessLayer.Services.Interface;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Repositories;
+using DataAccessLayer.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {
-    public class AuthorService
+    public class AuthorService : IAuthorService
     {
-        private readonly AuthorRepository _authorRepository;
+        private readonly IAuthorRepository _authorRepository;
 
-        public AuthorService(AuthorRepository authorRepository)
+        public AuthorService(IAuthorRepository authorRepository)
         {
             _authorRepository = authorRepository;
-        }
+        }// Don't forget Controller
 
         public async Task<List<AuthorResponseDTO>> GetAllAuthors()
         {

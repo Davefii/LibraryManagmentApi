@@ -1,7 +1,9 @@
-﻿using BusinessLayer.DTOs;
+﻿using DataAccessLayer.Repositories.DTOs;
+using BusinessLayer.Services.Interface;
 using DataAccessLayer.Context;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Repositories;
+using DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,21 +13,21 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {
-    public class DashbaordService
+    public class DashbaordService : IDashboardService
     {
-        private readonly BookRepository _bookRepository;
-        private readonly AuthorRepository _authorRepository;
-        private readonly CategoryRepository _categoryRepository;
-        private readonly MemberRepository _memberRepository;
-        private readonly BorrowingRepository _borrowingRepository;
-        private readonly AppDbContext _context;
+        private readonly IBookRepository _bookRepository;
+        private readonly IAuthorRepository _authorRepository;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IMemberRepository _memberRepository;
+        private readonly IBorrowingRepository _borrowingRepository;
+        private readonly IDashboardRepository _dashboardRepository;
         public DashbaordService(
-            BookRepository bookRepository,
-            AuthorRepository authorRepository,
-            CategoryRepository categoryRepository,
-            MemberRepository memberRepository,
-            BorrowingRepository borrowingRepository,
-            AppDbContext context
+            IBookRepository bookRepository,
+            IAuthorRepository authorRepository,
+            ICategoryRepository categoryRepository,
+            IMemberRepository memberRepository,
+            IBorrowingRepository borrowingRepository,
+            IDashboardRepository dashboardRepository
             )
         {
             _bookRepository = bookRepository;
@@ -33,7 +35,7 @@ namespace BusinessLayer.Services
             _categoryRepository = categoryRepository;
             _memberRepository = memberRepository;
             _borrowingRepository = borrowingRepository;
-            _context = context;
+            _dashboardRepository = dashboardRepository;
         }
 
         public async Task<DashboardDTO> Dashboard()
@@ -57,48 +59,17 @@ namespace BusinessLayer.Services
 
 
         }
-        public async Task<List<PopularBookDTO>> GetPopularBooks()
+        public async Task<List<PopularBookDTO>> GetPopularBooksAsync()
         {
-            return await _context.Borrowings.AsNoTracking()
-            .GroupBy(b => new { b.BookId, b.Book.Title })
-            .Select(g => new PopularBookDTO
-            {
-                BookId = g.Key.BookId,
-                Title = g.Key.Title,
-                BorrowCount = g.Count()
-            })
-            .OrderByDescending(b => b.BorrowCount)
-            .Take(5)
-            .ToListAsync();
+            return await _dashboardRepository.GetPopularBooksReturnedAsync();
         }
-        public async Task<List<PopularBookDTO>> GetPopularBooksReturned()
+        public async Task<List<PopularBookDTO>> GetPopularBooksReturnedAsync()
         {
-            return await _context.Borrowings.AsNoTracking()
-            .Where(b => b.IsReturned == true)
-            .GroupBy(b => new { b.BookId, b.Book.Title })
-            .Select(g => new PopularBookDTO
-            {
-                BookId = g.Key.BookId,
-                Title = g.Key.Title,
-                BorrowCount = g.Count()
-            })
-            .OrderByDescending(b => b.BorrowCount)
-            .Take(5)
-            .ToListAsync();
+            return await _dashboardRepository.GetPopularBooksReturnedAsync();
         }
-        public async Task<List<BooksbycategoryDTO>> GetBooksByCategory()
+        public async Task<List<BooksbycategoryDTO>> GetBooksByCategoryAsync()
         {
-            return await _context.Categories.AsNoTracking()
-                .Include(B => B.Books)
-                .GroupBy(b => new { b.Name })
-                .Select(C => new BooksbycategoryDTO
-                {
-                    NameCategory = C.Key.Name,
-                    TotalBooks = C.SelectMany(c => c.Books).Count()
-                })
-                .Where(T => T.TotalBooks >= 1)
-                .OrderByDescending(C => C.TotalBooks)
-                .ToListAsync();
+            return await _dashboardRepository.GetBooksByCategoryAsync();
         }
         public async Task<List<RecentborrowingsDTO>> GetRecentborrowingsAsync()
         {

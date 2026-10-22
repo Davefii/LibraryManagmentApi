@@ -2,6 +2,7 @@
 using Azure.Core;
 using BusinessLayer.DTOs;
 using BusinessLayer.Services;
+using BusinessLayer.Services.Interface;
 using BusinessLayer.Services.Interfaces;
 using DataAccessLayer.Entities;
 using LibraryApi.Requests;
@@ -17,11 +18,11 @@ namespace LibraryApi.Controllers
     [Route("api/[Controller]")]
     public class BooksController : Controller
     {
-        private readonly BookService _bookservice;
+        private readonly IBookService _bookservice;
         private readonly ImageService _imageService;
-        private readonly AuthorService _author;
-        private readonly CategoryService _category;
-        public BooksController(BookService bookService, ImageService imageService, AuthorService author, CategoryService category)
+        private readonly IAuthorService _author;
+        private readonly ICategoryService _category;
+        public BooksController(IBookService bookService, ImageService imageService, IAuthorService author, ICategoryService category)
         {
             _bookservice = bookService;
             _imageService = imageService;

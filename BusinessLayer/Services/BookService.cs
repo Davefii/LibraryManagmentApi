@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.DTOs;
+using BusinessLayer.Services.Interface;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Repositories;
+using DataAccessLayer.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,18 +12,18 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {
-    public class BookService
+    public class BookService : IBookService
     {
-        private readonly BookRepository _bookRepository;
-        private readonly AuthorRepository _authorRepository;
-        private readonly CategoryRepository _categoryRepository;
+        private readonly IBookRepository _bookRepository;
+        private readonly IAuthorRepository _authorRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public BookService(BookRepository bookRepository, AuthorRepository authorRepository, CategoryRepository categoryRepository)
+        public BookService(IBookRepository bookRepository, IAuthorRepository authorRepository, ICategoryRepository categoryRepository)
         {
             _bookRepository = bookRepository;
             _authorRepository = authorRepository;
             _categoryRepository = categoryRepository;
-        }
+        }// Don't forget Controller Book
         public async Task<List<BookResponseDTO>> GetAllBooks()
         {
             var books = await _bookRepository.GetAllAsync();

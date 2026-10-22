@@ -11,17 +11,19 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.RateLimiting;
+using DataAccessLayer.Repositories.Interfaces;
+using BusinessLayer.Services.Interface;
 namespace LibraryApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly UserRepository _userRepository;
-        private readonly RefreshTokenService _refreshTokenService;
+        private readonly IUserRepository _userRepository;
+        private readonly IRefreshTokenService _refreshTokenService;
         private readonly ILogger<AuthController> _logger;
-        private readonly AuditService _auditService;
-        public AuthController(UserRepository userRepository, RefreshTokenService refreshTokenService, ILogger<AuthController> logger, AuditService auditService)
+        private readonly IAuditService _auditService;
+        public AuthController(IUserRepository userRepository, IRefreshTokenService refreshTokenService, ILogger<AuthController> logger, IAuditService auditService)
         {
             _userRepository = userRepository;
             _refreshTokenService = refreshTokenService;

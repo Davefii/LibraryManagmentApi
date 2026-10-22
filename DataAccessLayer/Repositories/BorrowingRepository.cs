@@ -1,5 +1,6 @@
 ﻿using DataAccessLayer.Context;
 using DataAccessLayer.Entities;
+using DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,12 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DataAccessLayer.Repositories
 {
-    public class BorrowingRepository
+    public class BorrowingRepository : IBorrowingRepository
     {
         private readonly AppDbContext _context;
-        private readonly BookRepository _bookRepository;
+        private readonly IBookRepository _bookRepository;
 
-        public BorrowingRepository(AppDbContext context, BookRepository bookRepository)
+        public BorrowingRepository(AppDbContext context, IBookRepository bookRepository)
         {
             _context = context;
             _bookRepository = bookRepository;

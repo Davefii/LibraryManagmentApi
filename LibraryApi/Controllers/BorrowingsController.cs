@@ -1,5 +1,6 @@
 using BusinessLayer.DTOs;
 using BusinessLayer.Services;
+using BusinessLayer.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -11,10 +12,10 @@ namespace LibraryApi.Controllers
     [Route("api/[Controller]")]
     public class BorrowingsController : Controller
     {
-        private readonly BorrowingService _borrowingService;
-        private readonly MemberService _memberService;
+        private readonly IBorrowingService _borrowingService;
+        private readonly IMemberService _memberService;
         public BorrowingsController(
-            BorrowingService borrowingService)
+            IBorrowingService borrowingService)
         {
             _borrowingService = borrowingService;
         }

@@ -1,7 +1,9 @@
 using BusinessLayer.Services;
+using BusinessLayer.Services.Interface;
 using DataAccessLayer.Context;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Repositories;
+using DataAccessLayer.Repositories.Interfaces;
 using LibraryApi;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
@@ -171,34 +173,35 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration
         .GetConnectionString("LibraryDB")));
 //BookRepository and BookService are added to the DI container with Scoped lifetime, which means a new instance will be created for each HTTP request.
-builder.Services.AddScoped<BookRepository>();
-builder.Services.AddScoped<BookService>();
+builder.Services.AddScoped<IBookRepository,BookRepository>();
+builder.Services.AddScoped<IBookService,BookService>();
 //AuthorRepository and AuthorService are added to the DI container with Scoped lifetime, which means a new instance will be created for each HTTP request.
-builder.Services.AddScoped<AuthorRepository>();
-builder.Services.AddScoped<AuthorService>();
+builder.Services.AddScoped<IAuthorRepository,AuthorRepository>();
+builder.Services.AddScoped<IAuthorService,AuthorService>();
 //CategoryRepository and CategoryService are added to the DI container with Scoped lifetime, which means a new instance will be created for each HTTP request.
-builder.Services.AddScoped<CategoryRepository>();
-builder.Services.AddScoped<CategoryService>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 //UserRepository and UserService are added to the DI container with Scoped lifetime, which means a new instance will be created for each HTTP request.
-builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 //RefreshToken
-builder.Services.AddScoped<RefreshTokenRepository>();
-builder.Services.AddScoped<RefreshTokenService>();
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 //UserProfileRepository and UserProfileService are added to the DI container with Scoped lifetime, which means a new instance will be created for each HTTP request.
-builder.Services.AddScoped<UserProfileRepository>();
-builder.Services.AddScoped<UserProfileService>();
+builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 //MemberRepository and MemberService are added to the DI container with Scoped lifetime, which means a new instance will be created for each HTTP request.
-builder.Services.AddScoped<MemberRepository>();
-builder.Services.AddScoped<MemberService>();
+builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+builder.Services.AddScoped<IMemberService, MemberService>();
 //BorrowingRepository and BorrowingService are added to the DI container with Scoped lifetime, which means a new instance will be created for each HTTP request.
-builder.Services.AddScoped<BorrowingRepository>();
-builder.Services.AddScoped<BorrowingService>();
+builder.Services.AddScoped<IBorrowingRepository, BorrowingRepository>();
+builder.Services.AddScoped<IBorrowingService, BorrowingService>();
 //Dashbaord
-builder.Services.AddScoped<DashbaordService>();
+builder.Services.AddScoped<IDashboardRepository, DashbaordRepositry>();
+builder.Services.AddScoped<IDashboardService, DashbaordService>();
 // Auditing
-builder.Services.AddScoped<AuditRepository>();
-builder.Services.AddScoped<AuditService>();
+builder.Services.AddScoped<IAudit, AuditRepository>();
+builder.Services.AddScoped<IAuditService,AuditService>();
 //ImageService
 builder.Services.AddScoped<ImageService>();
 builder.Services.AddCors(options =>

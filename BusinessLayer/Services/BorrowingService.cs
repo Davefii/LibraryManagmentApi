@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.DTOs;
+using BusinessLayer.Services.Interface;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Repositories;
+using DataAccessLayer.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,18 +11,18 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {
-    public class BorrowingService
+    public class BorrowingService : IBorrowingService
     {
-        private readonly BorrowingRepository _borrowingRepository;
-        private readonly MemberService _memberService;
-        private readonly BookRepository _bookRepository;
-        private readonly AuditService _auditService;
+        private readonly IBorrowingRepository _borrowingRepository;
+        private readonly IMemberService _memberService;
+        private readonly IBookRepository _bookRepository;
+        private readonly IAuditService _auditService;
 
         public BorrowingService(
-            BorrowingRepository borrowingRepository,
-            MemberService memberService,
-            BookRepository bookRepository,
-            AuditService auditService)
+            IBorrowingRepository borrowingRepository,
+            IMemberService memberService,
+            IBookRepository bookRepository,
+            IAuditService auditService)
         {
             _borrowingRepository = borrowingRepository;
             _memberService = memberService;

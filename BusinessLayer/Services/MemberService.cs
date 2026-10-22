@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.DTOs;
+using BusinessLayer.Services.Interface;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Repositories;
+using DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,17 +12,17 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {
-    public class MemberService
+    public class MemberService : IMemberService
     {
-        private readonly MemberRepository _memberRepository;
-        private readonly UserRepository _userRepository;
-        private readonly BorrowingRepository _borrowingRepository;
-        private readonly DashbaordService _dashbaordService;
+        private readonly IMemberRepository _memberRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IBorrowingRepository _borrowingRepository;
+        private readonly IDashboardService _dashbaordService;
         public MemberService(
-            MemberRepository memberRepository,
-            UserRepository userRepository,
-            BorrowingRepository borrowingRepository,
-            DashbaordService dashbaordService)
+            IMemberRepository memberRepository,
+            IUserRepository userRepository,
+            IBorrowingRepository borrowingRepository,
+            IDashboardService dashbaordService)
         {
             _memberRepository = memberRepository;
             _userRepository = userRepository;

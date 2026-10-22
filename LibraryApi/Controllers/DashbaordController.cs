@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.DTOs;
 using BusinessLayer.Services;
+using BusinessLayer.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +9,10 @@ namespace LibraryApi.Controllers
     [Authorize]
     public class DashbaordController : Controller
     {
-        private readonly DashbaordService _dashboardService;
+        private readonly IDashboardService _dashboardService;
 
         public DashbaordController(
-            DashbaordService dashboardService)
+            IDashboardService dashboardService)
         {
             _dashboardService = dashboardService;
         }
@@ -30,7 +31,7 @@ namespace LibraryApi.Controllers
         {
             var books =
                 await _dashboardService
-                    .GetPopularBooks();
+                    .GetPopularBooksAsync();
 
             return Ok(books);
         }
@@ -40,7 +41,7 @@ namespace LibraryApi.Controllers
         {
             var Popularbooks =
                 await _dashboardService
-                    .GetPopularBooksReturned();
+                    .GetPopularBooksReturnedAsync();
 
             return Ok(Popularbooks);
         }
@@ -48,7 +49,7 @@ namespace LibraryApi.Controllers
         [HttpGet("BooksByCategory")]
         public async Task<IActionResult> BooksByCategory()
         {
-            var BooksbyCategory = await _dashboardService.GetBooksByCategory();
+            var BooksbyCategory = await _dashboardService.GetBooksByCategoryAsync();
             return Ok(BooksbyCategory);
         }
         [Authorize(Roles = $"{Roles.Admin}")]

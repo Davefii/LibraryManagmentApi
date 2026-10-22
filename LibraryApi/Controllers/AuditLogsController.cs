@@ -1,5 +1,6 @@
 using BusinessLayer.DTOs;
 using BusinessLayer.Services;
+using BusinessLayer.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +11,9 @@ namespace LibraryApi.Controllers
     [Route("api/[Controller]")]
     public class AuditLogsController : ControllerBase
     {
-        private readonly AuditService _auditService;
+        private readonly IAuditService _auditService;
 
-        public AuditLogsController(AuditService auditService)
+        public AuditLogsController(IAuditService auditService)
         {
             _auditService = auditService;
         }

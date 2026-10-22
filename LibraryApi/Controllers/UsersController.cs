@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.DTOs;
 using BusinessLayer.Services;
+using BusinessLayer.Services.Interface;
 using LibraryApi.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,10 @@ namespace LibraryApi.Controllers
     [Route("api/[controller]")]
     public class UsersController : Controller
     {
-        private readonly UserService _userService;
-        private readonly MemberService _memberService;
+        private readonly IUserService _userService;
+        private readonly IMemberService _memberService;
 
-        public UsersController(UserService userService,MemberService memberService)
+        public UsersController(IUserService userService, IMemberService memberService)
         {
             _userService = userService;
             _memberService = memberService;

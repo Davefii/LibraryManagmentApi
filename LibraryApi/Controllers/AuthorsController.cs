@@ -1,6 +1,7 @@
 ﻿using Azure.Core;
 using BusinessLayer.DTOs;
 using BusinessLayer.Services;
+using BusinessLayer.Services.Interface;
 using BusinessLayer.Services.Interfaces;
 using LibraryApi.Requests;
 using LibraryApi.Service;
@@ -15,9 +16,9 @@ namespace LibraryApi.Controllers
     [Route("api/[controller]")]
     public class AuthorsController : Controller
     {
-        private readonly AuthorService _authorService;
+        private readonly IAuthorService _authorService;
         private readonly ImageService _imageService;
-        public AuthorsController(AuthorService authorService, ImageService imageService)
+        public AuthorsController(IAuthorService authorService, ImageService imageService)
         {
             _authorService = authorService;
             _imageService = imageService;

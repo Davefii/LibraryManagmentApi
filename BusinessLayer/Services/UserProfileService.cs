@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.DTOs;
+using BusinessLayer.Services.Interface;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Repositories;
+using DataAccessLayer.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {
-    public class UserProfileService
+    public class UserProfileService : IUserProfileService
     {
-        private readonly UserProfileRepository _profileRepository;
-        private readonly UserRepository _userRepository;
+        private readonly IUserProfileRepository _profileRepository;
+        private readonly IUserRepository _userRepository;
 
         public UserProfileService(
-            UserProfileRepository profileRepository,
-            UserRepository userRepository)
+            IUserProfileRepository profileRepository,
+            IUserRepository userRepository)
         {
             _profileRepository = profileRepository;
             _userRepository = userRepository;
