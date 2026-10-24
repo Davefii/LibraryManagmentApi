@@ -57,7 +57,22 @@ namespace BusinessLayer.Services
                 CreatedAt = user.CreatedAt
             };
         }
+        public async Task<UserResponseDTO?> GetUserByEmail(string email)
+        {
+            var user = await _userRepository.GetByEmailAsync(email);
+            if (user == null)
+                return null;
 
+            return new UserResponseDTO
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Password = user.Password,
+                Role = user.Role,
+                IsActive = user.IsActive,
+                CreatedAt = user.CreatedAt
+            };
+        }
         public async Task<int> AddUser(CreateUserDTO dto)
         {
             var existingUser =
@@ -80,11 +95,7 @@ namespace BusinessLayer.Services
             int userID = await _userRepository.AddAsync(user);
             return userID;
         }
-
-
-        public async Task UpdateUser(
-            int id,
-            UpdateUserDTO dto)
+        public async Task UpdateUser(int id,UpdateUserDTO dto)
         {
             var user =
                 await _userRepository.GetByIdAsync(id);

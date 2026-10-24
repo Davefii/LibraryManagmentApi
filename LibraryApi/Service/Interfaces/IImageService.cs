@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Services.Interfaces
 {
-    internal interface IImageService
+    public interface IImageService
     {
         Task<string> SaveImageAsync(IFormFile image, string folderName);
 

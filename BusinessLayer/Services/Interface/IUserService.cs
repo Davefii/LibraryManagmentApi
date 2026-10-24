@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.DTOs;
+using DataAccessLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace BusinessLayer.Services.Interface
     {
         Task<List<UserResponseDTO>> GetAllUsers();
         Task<UserResponseDTO?> GetUserById(int id);
+        Task<UserResponseDTO?> GetUserByEmail(string email);
         Task<int> AddUser(CreateUserDTO dto);
         Task UpdateUser(int id,UpdateUserDTO dto);
         Task DeleteUser(int id);

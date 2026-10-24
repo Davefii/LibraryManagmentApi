@@ -1,5 +1,6 @@
 using BusinessLayer.Services;
 using BusinessLayer.Services.Interface;
+using BusinessLayer.Services.Interfaces;
 using DataAccessLayer.Context;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Repositories;
@@ -203,7 +204,7 @@ builder.Services.AddScoped<IDashboardService, DashbaordService>();
 builder.Services.AddScoped<IAudit, AuditRepository>();
 builder.Services.AddScoped<IAuditService,AuditService>();
 //ImageService
-builder.Services.AddScoped<ImageService>();
+builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Librarypolicy",

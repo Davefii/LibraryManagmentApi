@@ -19,13 +19,13 @@ namespace LibraryApi.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
         private readonly IRefreshTokenService _refreshTokenService;
         private readonly ILogger<AuthController> _logger;
         private readonly IAuditService _auditService;
-        public AuthController(IUserRepository userRepository, IRefreshTokenService refreshTokenService, ILogger<AuthController> logger, IAuditService auditService)
+        public AuthController(IUserService userService, IRefreshTokenService refreshTokenService, ILogger<AuthController> logger, IAuditService auditService)
         {
-            _userRepository = userRepository;
+            _userService = userService;
             _refreshTokenService = refreshTokenService;
             _logger = logger;
             _auditService = auditService;
@@ -46,8 +46,8 @@ namespace LibraryApi.Controllers
         {
 
             var user =
-                await _userRepository
-                    .GetByEmailAsync(request.Email);
+                await _userService
+                    .GetUserByEmail(request.Email);
 
             if (user == null)
             {

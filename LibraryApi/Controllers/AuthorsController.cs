@@ -17,8 +17,8 @@ namespace LibraryApi.Controllers
     public class AuthorsController : Controller
     {
         private readonly IAuthorService _authorService;
-        private readonly ImageService _imageService;
-        public AuthorsController(IAuthorService authorService, ImageService imageService)
+        private readonly IImageService _imageService;
+        public AuthorsController(IAuthorService authorService, IImageService imageService)
         {
             _authorService = authorService;
             _imageService = imageService;

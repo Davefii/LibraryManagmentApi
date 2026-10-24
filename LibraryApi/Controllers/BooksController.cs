@@ -19,10 +19,10 @@ namespace LibraryApi.Controllers
     public class BooksController : Controller
     {
         private readonly IBookService _bookservice;
-        private readonly ImageService _imageService;
+        private readonly IImageService _imageService;
         private readonly IAuthorService _author;
         private readonly ICategoryService _category;
-        public BooksController(IBookService bookService, ImageService imageService, IAuthorService author, ICategoryService category)
+        public BooksController(IBookService bookService, IImageService imageService, IAuthorService author, ICategoryService category)
         {
             _bookservice = bookService;
             _imageService = imageService;
