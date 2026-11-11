@@ -2,4 +2,5 @@
   <Project Path="BusinessLayer/BusinessLayer.csproj" />
   <Project Path="DataAccessLayer/DataAccessLayer.csproj" />
   <Project Path="LibraryApi/LibraryApi.csproj" />
+  <Project Path="TestLibraryManagment/TestLibraryManagment.csproj" Id="66c7b188-e65b-4d7b-a1ca-297fba337f20" />
 </Solution>

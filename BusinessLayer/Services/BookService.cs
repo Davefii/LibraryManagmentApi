@@ -23,7 +23,7 @@ namespace BusinessLayer.Services
             _bookRepository = bookRepository;
             _authorRepository = authorRepository;
             _categoryRepository = categoryRepository;
-        }// Don't forget Controller Book
+        }
         public async Task<List<BookResponseDTO>> GetAllBooks()
         {
             var books = await _bookRepository.GetAllAsync();
